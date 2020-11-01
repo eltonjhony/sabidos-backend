@@ -24,7 +24,7 @@ func NewAccountEntrypointHandler(r *gin.RouterGroup, obtainAccount entity.Obtain
 
 func (accountEntrypointHandler *AccountEntrypointHandler) FindAccount(c *gin.Context) {
 	accounts, _ := accountEntrypointHandler.ObtainAccount.Get(c.Request.Context(), c.Param("id"))
-	c.JSON(200, gin.H{"data": accounts})
+	c.JSON(200, accounts)
 }
 
 func (accountEntrypointHandler *AccountEntrypointHandler) Create(c *gin.Context) {
@@ -44,5 +44,5 @@ func (accountEntrypointHandler *AccountEntrypointHandler) Create(c *gin.Context)
 		return
 	}
 
-	c.JSON(200, gin.H{"data": account})
+	c.JSON(200, account)
 }

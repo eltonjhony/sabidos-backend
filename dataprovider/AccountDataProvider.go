@@ -42,11 +42,7 @@ func (provider *AccountDataProvider) Insert(ctx context.Context, acc entity.Acco
 	if acc.Id == 0 {
 		acc.SetId(rand.Intn(100000))
 	}
-	result, err := accountsCollection.InsertOne(ctx, bson.D{
-		{Key: "id", Value: acc.Id},
-		{Key: "name", Value: acc.Name},
-		{Key: "nickname", Value: acc.NickName},
-	})
+	result, err := accountsCollection.InsertOne(ctx, acc)
 	if err != nil {
 		log.Fatal("Error on Decoding the document", err)
 		return err
