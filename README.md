@@ -3,4 +3,21 @@ Golang backend for sabidos
 
  - docker-compose up
 
- - http://localhot:8080/v1/ranking
+ - POST: http://localhot:8080/v1/account
+
+ {
+        "name": "Hulk",
+        "nickname": "Smash",
+        "avatar": {
+            "defaultAvatarId": ""
+        },
+        "reputation": {
+            "level": "",
+            "stars": ""
+        },
+        "totalAnswered": "",
+        "totalHits": ""
+    
+}
+
+- GET: http://localhot:8080/v1/account/1000

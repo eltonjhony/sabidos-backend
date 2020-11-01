@@ -3,6 +3,7 @@ package entity
 import "context"
 
 type Account struct {
+	Id            int        `json:"id"`
 	Name          string     `json:"name"`
 	NickName      string     `json:"nickname"`
 	Avatar        Avatar     `json:"avatar"`
@@ -11,11 +12,19 @@ type Account struct {
 	TotalHits     string     `json:"totalHits"`
 }
 
+func (acc *Account) SetId(id int) {
+	acc.Id = id
+}
+
 type ObtainAccountUseCase interface {
-	Fetch(ctx context.Context) ([]Account, error)
+	Get(ctx context.Context, id string) (acc Account, err error)
+}
+
+type InsertAccountUseCase interface {
+	Insert(ctx context.Context, acc Account) error
 }
 
 type AccountDataProvider interface {
-	Fetch(ctx context.Context) (res []Account, err error)
-	Insert(acc Account, ctx context.Context)
+	Get(ctx context.Context, id string) (acc Account, err error)
+	Insert(ctx context.Context, acc Account) error
 }

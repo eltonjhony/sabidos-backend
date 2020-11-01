@@ -21,7 +21,7 @@ func NewRankingDataProvider(Conn *mongo.Client) entity.RankingRepository {
 func (provider *RankingDataProvider) Fetch(ctx context.Context) (res []entity.Ranking, err error) {
 	var rankingList []entity.Ranking
 	bfilter := bson.M{"name": "Test"}
-	collection := provider.Conn.Database("sabidos").Collection("ranking")
+	collection := provider.Conn.Database("sabidos").Collection("rankings")
 	cur, err := collection.Find(context.TODO(), bfilter)
 	if err != nil {
 		log.Fatal("Error on Finding all the documents", err)

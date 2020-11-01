@@ -23,10 +23,12 @@ func main() {
 	_entrypoint.NewRankingEntrypointHandler(api, rankingUseCase)
 
 	accountDataProvider := _dataprovider.NewAccountDataProvider(db)
-	accountUseCase := _accountUsecase.NewObtainAccountUsecase(accountDataProvider)
-	_entrypoint.NewAccountEntrypointHandler(api, accountUseCase)
+	obtainAccountUseCase := _accountUsecase.NewObtainAccountUsecase(accountDataProvider)
+	insertAccountUseCase := _accountUsecase.NewInsertAccountUsecase(accountDataProvider)
 
-	// config.SetupModels(accountDataProvider)
+	_entrypoint.NewAccountEntrypointHandler(api, obtainAccountUseCase, insertAccountUseCase)
+
+	config.SetupModels(accountDataProvider, db)
 
 	r.Run()
 }

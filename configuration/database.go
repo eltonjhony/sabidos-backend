@@ -38,8 +38,13 @@ func ConnectToDB() *mongo.Client {
 	return client
 }
 
-func SetupModels(dp *entity.AccountDataProvider) {
+func SetupModels(dp entity.AccountDataProvider, conn *mongo.Client) {
+	quickstartDatabase := conn.Database("sabidos")
+	quickstartDatabase.Collection("accounts")
 
+	account := entity.Account{1000, "Hulk", "Smash", entity.Avatar{"1"}, entity.Reputation{"5", "10"}, "100", "100"}
+
+	dp.Insert(context.Background(), account)
 }
 
 func SetUpDBConnection(DB *mongo.Client) {

@@ -16,10 +16,10 @@ func NewObtainAccountUsecase(a entity.AccountDataProvider) entity.ObtainAccountU
 	}
 }
 
-func (a *ObtainAccountUseCase) Fetch(c context.Context) (res []entity.Account, err error) {
-	res, err = a.accountRepository.Fetch(c)
+func (a *ObtainAccountUseCase) Get(c context.Context, id string) (acc entity.Account, err error) {
+	acc, err = a.accountRepository.Get(c, id)
 	if err != nil {
-		return nil, err
+		return acc, err
 	}
-	return
+	return acc, err
 }

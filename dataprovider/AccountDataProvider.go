@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"math/rand"
+	"strconv"
 
 	"go.mongodb.org/mongo-driver/bson"
 
@@ -19,34 +21,37 @@ func NewAccountDataProvider(Conn *mongo.Client) entity.AccountDataProvider {
 	return &AccountDataProvider{Conn}
 }
 
-func (provider *AccountDataProvider) Fetch(ctx context.Context) (res []entity.Account, err error) {
-	var accounts []entity.Account
-	bfilter := bson.M{"id": "PUr2i6QQcMfKBGRL9sYyw8UJ0tv1"}
-	collection := provider.Conn.Database("sabidos").Collection("account")
-	cur, err := collection.Find(context.TODO(), bfilter)
-	if err != nil {
-		log.Fatal("Error on Finding all the documents", err)
+func (provider *AccountDataProvider) Get(ctx context.Context, id string) (res entity.Account, err error) {
+	var account entity.Account
+	i, err := strconv.ParseInt(id, 10, 64)
+	bfilter := bson.M{"id": i}
+
+	collection := provider.Conn.Database("sabidos").Collection("accounts")
+
+	if err = collection.FindOne(ctx, bfilter).Decode(&account); err != nil {
+		log.Panic(err)
 	}
 
-	for cur.Next(context.TODO()) {
-		var account entity.Account
-		err = cur.Decode(&account)
-		if err != nil {
-			log.Fatal("Error on Decoding the document", err)
-		}
-		accounts = append(accounts, account)
-	}
-	return accounts, nil
+	fmt.Println(account)
+
+	return account, nil
 }
 
-func (provider *AccountDataProvider) Insert(acc entity.Account, ctx context.Context) {
-	accountsCollection := provider.Conn.Database("sabidos").Collection("account")
+func (provider *AccountDataProvider) Insert(ctx context.Context, acc entity.Account) (err error) {
+	accountsCollection := provider.Conn.Database("sabidos").Collection("accounts")
+	if acc.Id == 0 {
+		acc.SetId(rand.Intn(100000))
+	}
 	result, err := accountsCollection.InsertOne(ctx, bson.D{
-		{Key: "title", Value: "The Polyglot Developer Podcast"},
-		{Key: "author", Value: "Nic Raboy"},
+		{Key: "id", Value: acc.Id},
+		{Key: "name", Value: acc.Name},
+		{Key: "nickname", Value: acc.NickName},
 	})
 	if err != nil {
 		log.Fatal("Error on Decoding the document", err)
+		return err
 	}
 	fmt.Printf("Inserted %v document into account collection!\n", result.InsertedID)
+
+	return
 }
