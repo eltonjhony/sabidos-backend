@@ -5,24 +5,28 @@ import (
 	"github.com/gin-gonic/gin"
 	config "github.com/sabidos/configuration"
 
-	_usecase "github.com/sabidos/core/usecase/RankingUseCase"
+	_accountUsecase "github.com/sabidos/core/usecase/AccountUseCase"
+	_rankingUsecase "github.com/sabidos/core/usecase/RankingUseCase"
+
 	_dataprovider "github.com/sabidos/dataprovider"
 	_entrypoint "github.com/sabidos/entrypoint"
 )
 
 func main() {
-	config.SetupModels()
 	r := gin.Default()
 	r.Use(cors.Default())
 	db := config.ConnectToDB()
-
-	rankingDataProvider := _dataprovider.NewRankingDataProvider(db)
-
-	rankingUseCase := _usecase.NewRankingUsecase(rankingDataProvider)
-
 	api := r.Group("/v1")
 
+	rankingDataProvider := _dataprovider.NewRankingDataProvider(db)
+	rankingUseCase := _rankingUsecase.NewRankingUsecase(rankingDataProvider)
 	_entrypoint.NewRankingEntrypointHandler(api, rankingUseCase)
+
+	accountDataProvider := _dataprovider.NewAccountDataProvider(db)
+	accountUseCase := _accountUsecase.NewObtainAccountUsecase(accountDataProvider)
+	_entrypoint.NewAccountEntrypointHandler(api, accountUseCase)
+
+	// config.SetupModels(accountDataProvider)
 
 	r.Run()
 }

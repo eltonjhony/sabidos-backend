@@ -5,6 +5,7 @@ import (
 	"log"
 
 	_ "github.com/jinzhu/gorm/dialects/postgres"
+	"github.com/sabidos/core/entity"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
@@ -17,7 +18,7 @@ var collection *mongo.Collection
 var ctx = context.TODO()
 
 func ConnectToDB() *mongo.Client {
-	clientOptions := options.Client().ApplyURI("mongodb://db:27017")
+	clientOptions := options.Client().ApplyURI("mongodb://localhost:27017")
 	client, err := mongo.NewClient(clientOptions)
 	if err != nil {
 		log.Fatal(err)
@@ -37,7 +38,7 @@ func ConnectToDB() *mongo.Client {
 	return client
 }
 
-func SetupModels() {
+func SetupModels(dp *entity.AccountDataProvider) {
 
 }
 
