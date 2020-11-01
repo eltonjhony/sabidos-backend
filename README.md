@@ -1,7 +1,7 @@
 # sabidos-backend
 Golang backend for sabidos
 
- - docker-compose up
+ - docker-compose up --build --force-recreate
 
  - POST: http://localhot:8080/v1/account
 
