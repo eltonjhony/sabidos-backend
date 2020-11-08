@@ -4,8 +4,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"math/rand"
-	"strconv"
 
 	"go.mongodb.org/mongo-driver/bson"
 
@@ -21,14 +19,12 @@ func NewAccountDataProvider(Conn *mongo.Client) entity.AccountDataProvider {
 	return &AccountDataProvider{Conn}
 }
 
-func (provider *AccountDataProvider) Get(ctx context.Context, id string) (res entity.Account, err error) {
+func (provider *AccountDataProvider) Get(ctx context.Context, filter bson.M) (res entity.Account, err error) {
 	var account entity.Account
-	i, err := strconv.ParseInt(id, 10, 64)
-	bfilter := bson.M{"id": i}
 
 	collection := provider.Conn.Database("sabidos").Collection("accounts")
 
-	if err = collection.FindOne(ctx, bfilter).Decode(&account); err != nil {
+	if err = collection.FindOne(ctx, filter).Decode(&account); err != nil {
 		log.Panic(err)
 	}
 
@@ -39,9 +35,7 @@ func (provider *AccountDataProvider) Get(ctx context.Context, id string) (res en
 
 func (provider *AccountDataProvider) Insert(ctx context.Context, acc entity.Account) (err error) {
 	accountsCollection := provider.Conn.Database("sabidos").Collection("accounts")
-	if acc.Id == 0 {
-		acc.SetId(rand.Intn(100000))
-	}
+
 	result, err := accountsCollection.InsertOne(ctx, acc)
 	if err != nil {
 		log.Fatal("Error on Decoding the document", err)

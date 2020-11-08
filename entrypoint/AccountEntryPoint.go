@@ -6,6 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/sabidos/core/entity"
+	"go.mongodb.org/mongo-driver/bson"
 )
 
 type AccountEntrypointHandler struct {
@@ -18,13 +19,21 @@ func NewAccountEntrypointHandler(r *gin.RouterGroup, obtainAccount entity.Obtain
 		ObtainAccount: obtainAccount,
 		InsertAccount: insertAcc,
 	}
-	r.GET("/account/:id", handler.FindAccount)
+	r.GET("/account/uid/:uid", handler.FindAccountByUid)
+	r.GET("/account/nickname/:nickname", handler.FindAccountByNickName)
 	r.POST("/account/", handler.Create)
 }
 
-func (accountEntrypointHandler *AccountEntrypointHandler) FindAccount(c *gin.Context) {
-	accounts, _ := accountEntrypointHandler.ObtainAccount.Get(c.Request.Context(), c.Param("id"))
-	c.JSON(200, accounts)
+func (accountEntrypointHandler *AccountEntrypointHandler) FindAccountByUid(c *gin.Context) {
+	bfilter := bson.M{"uid": c.Param("uid")}
+	accounts, _ := accountEntrypointHandler.ObtainAccount.Get(c.Request.Context(), bfilter)
+	c.JSON(200, gin.H{"account": accounts})
+}
+
+func (accountEntrypointHandler *AccountEntrypointHandler) FindAccountByNickName(c *gin.Context) {
+	bfilter := bson.M{"nickname": c.Param("nickname")}
+	accounts, _ := accountEntrypointHandler.ObtainAccount.Get(c.Request.Context(), bfilter)
+	c.JSON(200, gin.H{"account": accounts})
 }
 
 func (accountEntrypointHandler *AccountEntrypointHandler) Create(c *gin.Context) {

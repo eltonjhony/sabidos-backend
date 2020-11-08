@@ -17,7 +17,9 @@ func NewInsertAccountUsecase(a entity.AccountDataProvider) entity.InsertAccountU
 }
 
 func (a *InserAccountUseCase) Insert(c context.Context, acc entity.Account) (err error) {
+
 	err = a.accountRepository.Insert(c, acc)
+
 	if err != nil {
 		return err
 	}

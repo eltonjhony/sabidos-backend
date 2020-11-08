@@ -18,7 +18,7 @@ var collection *mongo.Collection
 var ctx = context.TODO()
 
 func ConnectToDB() *mongo.Client {
-	clientOptions := options.Client().ApplyURI("mongodb://db:27017")
+	clientOptions := options.Client().ApplyURI("mongodb://localhost:27017")
 	client, err := mongo.NewClient(clientOptions)
 	if err != nil {
 		log.Fatal(err)
@@ -42,7 +42,7 @@ func SetupModels(dp entity.AccountDataProvider, conn *mongo.Client) {
 	quickstartDatabase := conn.Database("sabidos")
 	quickstartDatabase.Collection("accounts")
 
-	account := entity.Account{1000, "Hulk", "Smash", entity.Avatar{"1"}, entity.Reputation{"5", "10"}, "100", "100"}
+	account := entity.Account{"yiXtigKxtEVKl5mBh4qB7ZKumBs1", "Hulk", "Smash", entity.Avatar{"1", ""}, entity.Reputation{"5", "10"}, "100", "100", "email", true, "tel"}
 
 	dp.Insert(context.Background(), account)
 }

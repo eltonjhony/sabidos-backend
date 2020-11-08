@@ -1,23 +1,26 @@
 package entity
 
-import "context"
+import (
+	"context"
+
+	"go.mongodb.org/mongo-driver/bson"
+)
 
 type Account struct {
-	Id            int        `json:"id"`
+	Uid           string     `json:"uid"`
 	Name          string     `json:"name"`
 	NickName      string     `json:"nickname"`
 	Avatar        Avatar     `json:"avatar"`
 	Reputation    Reputation `json:"reputation"`
 	TotalAnswered string     `json:"totalAnswered"`
 	TotalHits     string     `json:"totalHits"`
-}
-
-func (acc *Account) SetId(id int) {
-	acc.Id = id
+	Email         string     `json:"email"`
+	IsAnonymous   bool       `json:"isAnonymous"`
+	Phone         string     `json:"phone"`
 }
 
 type ObtainAccountUseCase interface {
-	Get(ctx context.Context, id string) (acc Account, err error)
+	Get(ctx context.Context, filter bson.M) (acc Account, err error)
 }
 
 type InsertAccountUseCase interface {
@@ -25,6 +28,6 @@ type InsertAccountUseCase interface {
 }
 
 type AccountDataProvider interface {
-	Get(ctx context.Context, id string) (acc Account, err error)
+	Get(ctx context.Context, filter bson.M) (acc Account, err error)
 	Insert(ctx context.Context, acc Account) error
 }
