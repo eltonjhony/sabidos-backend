@@ -28,6 +28,6 @@ type InsertAccountUseCase interface {
 }
 
 type AccountDataProvider interface {
-	Get(ctx context.Context, filter bson.M) (acc Account, err error)
+	Get(ctx context.Context, filter bson.M) (account Account, err error)
 	Insert(ctx context.Context, acc Account) error
 }
