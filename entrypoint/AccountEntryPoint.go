@@ -26,13 +26,27 @@ func NewAccountEntrypointHandler(r *gin.RouterGroup, obtainAccount entity.Obtain
 
 func (accountEntrypointHandler *AccountEntrypointHandler) FindAccountByUid(c *gin.Context) {
 	bfilter := bson.M{"uid": c.Param("uid")}
-	accounts, _ := accountEntrypointHandler.ObtainAccount.Get(c.Request.Context(), bfilter)
+	accounts, err := accountEntrypointHandler.ObtainAccount.Get(c.Request.Context(), bfilter)
+
+	if err != nil {
+		fmt.Println("Can't find account", err)
+		c.JSON(404, gin.H{"message": "Account not found"})
+		return
+	}
+
 	c.JSON(200, gin.H{"account": accounts})
 }
 
 func (accountEntrypointHandler *AccountEntrypointHandler) FindAccountByNickName(c *gin.Context) {
 	bfilter := bson.M{"nickname": c.Param("nickname")}
-	accounts, _ := accountEntrypointHandler.ObtainAccount.Get(c.Request.Context(), bfilter)
+	accounts, err := accountEntrypointHandler.ObtainAccount.Get(c.Request.Context(), bfilter)
+
+	if err != nil {
+		fmt.Println("Can't find account", err)
+		c.JSON(404, gin.H{"message": "Account not found"})
+		return
+	}
+
 	c.JSON(200, gin.H{"account": accounts})
 }
 
@@ -50,6 +64,7 @@ func (accountEntrypointHandler *AccountEntrypointHandler) Create(c *gin.Context)
 	err := accountEntrypointHandler.InsertAccount.Insert(c.Request.Context(), account)
 	if err != nil {
 		fmt.Println("Can't create account", err)
+		c.JSON(400, gin.H{"message": "Can't create account with the providede params"})
 		return
 	}
 

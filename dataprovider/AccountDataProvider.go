@@ -21,16 +21,17 @@ func NewAccountDataProvider(Conn *mongo.Client) entity.AccountDataProvider {
 
 func (provider *AccountDataProvider) Get(ctx context.Context, filter bson.M) (res entity.Account, err error) {
 	var account entity.Account
+	fmt.Printf("Searching for account")
 
 	collection := provider.Conn.Database("sabidos").Collection("accounts")
 
 	if err = collection.FindOne(ctx, filter).Decode(&account); err != nil {
-		log.Panic(err)
+		log.Printf("Document with param  %s not found", filter)
+		return account, err
 	}
+	fmt.Printf("Account found")
 
-	fmt.Println(account)
-
-	return account, nil
+	return account, err
 }
 
 func (provider *AccountDataProvider) Insert(ctx context.Context, acc entity.Account) (err error) {
@@ -38,7 +39,7 @@ func (provider *AccountDataProvider) Insert(ctx context.Context, acc entity.Acco
 
 	result, err := accountsCollection.InsertOne(ctx, acc)
 	if err != nil {
-		log.Fatal("Error on Decoding the document", err)
+		log.Panic("Error on Decoding the document", err)
 		return err
 	}
 	fmt.Printf("Inserted %v document into account collection!\n", result.InsertedID)
