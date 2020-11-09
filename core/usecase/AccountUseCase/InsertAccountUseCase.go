@@ -20,7 +20,7 @@ func NewInsertAccountUsecase(a entity.AccountDataProvider) entity.InsertAccountU
 
 func (a *InserAccountUseCase) Insert(c context.Context, acc entity.Account) (err error) {
 
-	bfilter := bson.M{"nickname": acc.NickName, "uid": acc.Uid}
+	bfilter := bson.M{"$or": []bson.M{bson.M{"nickname": acc.NickName}, bson.M{"uid": acc.Uid}}}
 
 	if account, _ := a.accountRepository.Get(c, bfilter); len(account.NickName) > 0 {
 		return errors.New("Account already exists")
