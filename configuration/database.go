@@ -42,7 +42,7 @@ func SetupModels(dp entity.AccountDataProvider, conn *mongo.Client) {
 	quickstartDatabase := conn.Database("sabidos")
 	quickstartDatabase.Collection("accounts")
 
-	account := entity.Account{"yiXtigKxtEVKl5mBh4qB7ZKumBs1", "Hulk", "Smash", entity.Avatar{"1", ""}, entity.Reputation{"5", "10"}, "100", "100", "email", true, "tel"}
+	account := entity.Account{"yiXtigKxtEVKl5mBh4qB7ZKumBs1", "Hulk", "Smash", entity.Avatar{1, ""}, entity.Reputation{"5", "10"}, "100", "100", "email", true, "tel"}
 
 	dp.Insert(context.Background(), account)
 }

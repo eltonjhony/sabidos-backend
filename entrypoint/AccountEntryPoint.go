@@ -64,7 +64,7 @@ func (accountEntrypointHandler *AccountEntrypointHandler) Create(c *gin.Context)
 	err := accountEntrypointHandler.InsertAccount.Insert(c.Request.Context(), account)
 	if err != nil {
 		fmt.Println("Can't create account", err)
-		c.JSON(400, gin.H{"message": "Can't create account with the providede params"})
+		c.JSON(400, gin.H{"message": err.Error()})
 		return
 	}
 
