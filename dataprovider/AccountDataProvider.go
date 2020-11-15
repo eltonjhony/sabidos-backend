@@ -26,7 +26,7 @@ func (provider *AccountDataProvider) Get(ctx context.Context, filter bson.M) (re
 	collection := provider.Conn.Database("sabidos").Collection("accounts")
 
 	if err = collection.FindOne(ctx, filter).Decode(&account); err != nil {
-		log.Printf("Document with param  %s not found", filter)
+		log.Printf("\nDocument with param  %s not found", filter)
 		return account, err
 	}
 	fmt.Printf("\nAccount found")
@@ -37,15 +37,15 @@ func (provider *AccountDataProvider) Get(ctx context.Context, filter bson.M) (re
 func (provider *AccountDataProvider) Insert(ctx context.Context, acc entity.Account) (err error) {
 	accountsCollection := provider.Conn.Database("sabidos").Collection("accounts")
 
-	fmt.Printf("Trying to insert: %+v\n", acc)
+	fmt.Printf("\nTrying to insert: %+v\n", acc)
 
 	result, err := accountsCollection.InsertOne(ctx, acc)
 	if err != nil {
 		log.Panic("Error on Decoding the document", err)
 		return err
 	}
-	fmt.Printf("Inserted %v document into account collection!\n", result.InsertedID)
-	fmt.Printf("Inserted: %+v\n", acc)
+	fmt.Printf("\nInserted %v document into account collection!\n", result.InsertedID)
+	fmt.Printf("\nInserted: %+v\n", acc)
 
 	return
 }

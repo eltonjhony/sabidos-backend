@@ -12,11 +12,15 @@ type Account struct {
 	NickName      string     `json:"nickname"`
 	Avatar        Avatar     `json:"avatar"`
 	Reputation    Reputation `json:"reputation"`
-	TotalAnswered string     `json:"totalAnswered"`
-	TotalHits     string     `json:"totalHits"`
+	TotalAnswered int        `json:"totalAnswered"`
+	TotalHits     int        `json:"totalHits"`
 	Email         string     `json:"email"`
 	IsAnonymous   bool       `json:"isAnonymous"`
 	Phone         string     `json:"phone"`
+}
+
+func (acc *Account) SetAvatar(avatar Avatar) {
+	acc.Avatar = avatar
 }
 
 type ObtainAccountUseCase interface {
@@ -24,7 +28,7 @@ type ObtainAccountUseCase interface {
 }
 
 type InsertAccountUseCase interface {
-	Insert(ctx context.Context, acc Account) error
+	Insert(ctx context.Context, acc Account) (account Account, err error)
 }
 
 type AccountDataProvider interface {

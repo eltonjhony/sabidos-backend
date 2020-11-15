@@ -9,6 +9,8 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
+const BAD_REQUEST_CODE = 1
+
 type AccountEntrypointHandler struct {
 	ObtainAccount entity.ObtainAccountUseCase
 	InsertAccount entity.InsertAccountUseCase
@@ -19,6 +21,7 @@ func NewAccountEntrypointHandler(r *gin.RouterGroup, obtainAccount entity.Obtain
 		ObtainAccount: obtainAccount,
 		InsertAccount: insertAcc,
 	}
+
 	r.GET("/account/uid/:uid", handler.FindAccountByUid)
 	r.GET("/account/nickname/:nickname", handler.FindAccountByNickName)
 	r.POST("/account/", handler.Create)
@@ -43,7 +46,7 @@ func (accountEntrypointHandler *AccountEntrypointHandler) FindAccountByNickName(
 
 	if err != nil {
 		fmt.Println("Can't find account", err)
-		c.JSON(404, gin.H{"message": "Account not found"})
+		c.JSON(404, gin.H{"code": BAD_REQUEST_CODE, "message": "Account not found"})
 		return
 	}
 
@@ -52,16 +55,18 @@ func (accountEntrypointHandler *AccountEntrypointHandler) FindAccountByNickName(
 
 func (accountEntrypointHandler *AccountEntrypointHandler) Create(c *gin.Context) {
 
-	var account entity.Account
+	var accountModel AccountModel
 
-	if err := c.ShouldBindJSON(&account); err != nil {
+	if err := c.ShouldBindJSON(&accountModel); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	fmt.Println(account)
+	fmt.Println(accountModel)
 
-	err := accountEntrypointHandler.InsertAccount.Insert(c.Request.Context(), account)
+	account := entity.Account{accountModel.Uid, accountModel.Name, accountModel.NickName, entity.Avatar{accountModel.DefaultAvatarId, ""}, entity.Reputation{0, 0}, 0, 0, accountModel.Email, true, accountModel.Phone}
+
+	account, err := accountEntrypointHandler.InsertAccount.Insert(c.Request.Context(), account)
 	if err != nil {
 		fmt.Println("Can't create account", err)
 		c.JSON(400, gin.H{"message": err.Error()})

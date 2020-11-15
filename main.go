@@ -6,6 +6,7 @@ import (
 	config "github.com/sabidos/configuration"
 
 	_accountUsecase "github.com/sabidos/core/usecase/AccountUseCase"
+	_avatarUsecase "github.com/sabidos/core/usecase/AvatarUseCase"
 	_rankingUsecase "github.com/sabidos/core/usecase/RankingUseCase"
 
 	_dataprovider "github.com/sabidos/dataprovider"
@@ -18,17 +19,21 @@ func main() {
 	db := config.ConnectToDB()
 	api := r.Group("/v1")
 
+	avatarDataProvider := _dataprovider.NewAvatarDataProvider(db)
+	avatarUseCase := _avatarUsecase.NewObtainAvatarUsecase(avatarDataProvider)
+	_entrypoint.NewAvatarEntrypointHandler(api, avatarUseCase)
+
 	rankingDataProvider := _dataprovider.NewRankingDataProvider(db)
 	rankingUseCase := _rankingUsecase.NewRankingUsecase(rankingDataProvider)
 	_entrypoint.NewRankingEntrypointHandler(api, rankingUseCase)
 
 	accountDataProvider := _dataprovider.NewAccountDataProvider(db)
 	obtainAccountUseCase := _accountUsecase.NewObtainAccountUsecase(accountDataProvider)
-	insertAccountUseCase := _accountUsecase.NewInsertAccountUsecase(accountDataProvider)
+	insertAccountUseCase := _accountUsecase.NewInsertAccountUsecase(accountDataProvider, avatarDataProvider)
 
 	_entrypoint.NewAccountEntrypointHandler(api, obtainAccountUseCase, insertAccountUseCase)
 
-	config.SetupModels(accountDataProvider, db)
+	config.SetupModels(accountDataProvider, avatarDataProvider, db)
 
 	r.Run()
 }
