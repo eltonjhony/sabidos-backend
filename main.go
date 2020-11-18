@@ -7,6 +7,8 @@ import (
 
 	_accountUsecase "github.com/sabidos/core/usecase/AccountUseCase"
 	_avatarUsecase "github.com/sabidos/core/usecase/AvatarUseCase"
+
+	_categoryUsecase "github.com/sabidos/core/usecase/CategoryUseCase"
 	_rankingUsecase "github.com/sabidos/core/usecase/RankingUseCase"
 
 	_dataprovider "github.com/sabidos/dataprovider"
@@ -23,6 +25,10 @@ func main() {
 	avatarUseCase := _avatarUsecase.NewObtainAvatarUsecase(avatarDataProvider)
 	_entrypoint.NewAvatarEntrypointHandler(api, avatarUseCase)
 
+	categoryDataProvider := _dataprovider.NewCategoryDataProvider(db)
+	categoryUseCase := _categoryUsecase.NewObtainCategoryUsecase(categoryDataProvider)
+	_entrypoint.NewCategoryEntrypointHandler(api, categoryUseCase)
+
 	rankingDataProvider := _dataprovider.NewRankingDataProvider(db)
 	rankingUseCase := _rankingUsecase.NewRankingUsecase(rankingDataProvider)
 	_entrypoint.NewRankingEntrypointHandler(api, rankingUseCase)
@@ -33,7 +39,7 @@ func main() {
 
 	_entrypoint.NewAccountEntrypointHandler(api, obtainAccountUseCase, insertAccountUseCase)
 
-	config.SetupModels(accountDataProvider, avatarDataProvider, db)
+	config.SetupModels(accountDataProvider, avatarDataProvider, categoryDataProvider, db)
 
 	r.Run()
 }

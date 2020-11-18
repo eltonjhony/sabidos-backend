@@ -28,6 +28,11 @@ func (a *InserAccountUseCase) Insert(c context.Context, acc entity.Account) (acc
 		return account, errors.New("Account already exists")
 	}
 
+	if acc.Avatar.Id == 0 {
+		defaultAvatar := entity.Avatar{1, ""}
+		acc.SetAvatar(defaultAvatar)
+	}
+
 	avatarFilter := bson.M{"id": acc.Avatar.Id}
 
 	avatar, _ := a.avatarDataProvider.FindOne(c, avatarFilter)

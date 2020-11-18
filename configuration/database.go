@@ -39,11 +39,9 @@ func ConnectToDB() *mongo.Client {
 	return client
 }
 
-func SetupModels(ac entity.AccountDataProvider, av entity.AvatarDataProvider, conn *mongo.Client) {
+func SetupModels(ac entity.AccountDataProvider, av entity.AvatarDataProvider, cat entity.CategoryDataProvider, conn *mongo.Client) {
 	quickstartDatabase := conn.Database("sabidos")
 	quickstartDatabase.Collection("accounts")
-
-	//TODO clean db
 
 	avatar1 := entity.Avatar{1, "https://res.cloudinary.com/ddb86uj5i/image/upload/v1604167774/sabidos/avatar/1.png"}
 	avatar2 := entity.Avatar{2, "https://res.cloudinary.com/ddb86uj5i/image/upload/v1604167776/sabidos/avatar/2.png"}
@@ -55,6 +53,11 @@ func SetupModels(ac entity.AccountDataProvider, av entity.AvatarDataProvider, co
 	avatar8 := entity.Avatar{8, "https://res.cloudinary.com/ddb86uj5i/image/upload/v1604167775/sabidos/avatar/8.png"}
 	avatar9 := entity.Avatar{9, "https://res.cloudinary.com/ddb86uj5i/image/upload/v1604167775/sabidos/avatar/9.png"}
 	avatar10 := entity.Avatar{10, "https://res.cloudinary.com/ddb86uj5i/image/upload/v1604167775/sabidos/avatar/10.png"}
+	avatar11 := entity.Avatar{11, "https://res.cloudinary.com/ddb86uj5i/image/upload/v1604167774/sabidos/avatar/11.png"}
+	avatar12 := entity.Avatar{12, "https://res.cloudinary.com/ddb86uj5i/image/upload/v1604167774/sabidos/avatar/12.png"}
+	avatar13 := entity.Avatar{13, "https://res.cloudinary.com/ddb86uj5i/image/upload/v1604167774/sabidos/avatar/13.png"}
+	avatar14 := entity.Avatar{14, "https://res.cloudinary.com/ddb86uj5i/image/upload/v1604167774/sabidos/avatar/14.png"}
+	avatar15 := entity.Avatar{15, "https://res.cloudinary.com/ddb86uj5i/image/upload/v1604167774/sabidos/avatar/15.png"}
 
 	bfilter := bson.M{"$or": []bson.M{bson.M{"nickname": "smash"}, bson.M{"uid": ""}}}
 
@@ -82,6 +85,46 @@ func SetupModels(ac entity.AccountDataProvider, av entity.AvatarDataProvider, co
 		av.Insert(context.Background(), avatar8)
 		av.Insert(context.Background(), avatar9)
 		av.Insert(context.Background(), avatar10)
+		av.Insert(context.Background(), avatar11)
+		av.Insert(context.Background(), avatar12)
+		av.Insert(context.Background(), avatar13)
+		av.Insert(context.Background(), avatar14)
+		av.Insert(context.Background(), avatar15)
+
+	}
+
+	category1 := entity.Category{1, "https://res.cloudinary.com/ddb86uj5i/image/upload/v1602365131/sabidos/categories/ic_random_category_hvxa1a.png", "Aleatório"}
+	category2 := entity.Category{2, "https://res.cloudinary.com/ddb86uj5i/image/upload/v1602367579/sabidos/categories/ic_curiosity_category_hjmqrl.png", "Curiosidades"}
+	category3 := entity.Category{3, "https://res.cloudinary.com/ddb86uj5i/image/upload/v1602367765/sabidos/categories/ic_sports_category_negv0m.png", "Esportes"}
+	category4 := entity.Category{4, "https://res.cloudinary.com/ddb86uj5i/image/upload/v1602367917/sabidos/categories/ic_science_category_qbtqsn.png", "Ciências"}
+	category5 := entity.Category{5, "https://res.cloudinary.com/ddb86uj5i/image/upload/v1602368011/sabidos/categories/ic_geography_category_urnzwm.png", "Geografia"}
+	category6 := entity.Category{6, "https://res.cloudinary.com/ddb86uj5i/image/upload/v1602368097/sabidos/categories/ic_history_category_myoxdd.png", "História"}
+	category7 := entity.Category{7, "https://res.cloudinary.com/ddb86uj5i/image/upload/v1602372897/sabidos/categories/ic_bio_category_yzm1li.png", "Biologia"}
+	category8 := entity.Category{8, "https://res.cloudinary.com/ddb86uj5i/image/upload/v1602372999/sabidos/categories/ic_literatura_category_me8qkt.png", "Literatura"}
+	category9 := entity.Category{9, "https://res.cloudinary.com/ddb86uj5i/image/upload/v1602373099/sabidos/categories/ic_religiao_category_se2p2j.png", "Religião"}
+	category10 := entity.Category{10, "https://res.cloudinary.com/ddb86uj5i/image/upload/v1602373303/sabidos/categories/ic_cine_category_jgzjet.png", "Cinema"}
+	category11 := entity.Category{11, "https://res.cloudinary.com/ddb86uj5i/image/upload/v1602373389/sabidos/categories/ic_tech_category_dqfmsj.png", "Tecnologia"}
+	category12 := entity.Category{12, "https://res.cloudinary.com/ddb86uj5i/image/upload/v1602373462/sabidos/categories/ic_games_category_fdhior.png", "Games"}
+
+	catFilter := bson.M{"id": 1}
+
+	category, _ := cat.FindOne(context.Background(), catFilter)
+
+	if category.Id == 0 {
+
+		cat.Insert(context.Background(), category1)
+		cat.Insert(context.Background(), category2)
+		cat.Insert(context.Background(), category3)
+		cat.Insert(context.Background(), category4)
+		cat.Insert(context.Background(), category5)
+		cat.Insert(context.Background(), category6)
+		cat.Insert(context.Background(), category7)
+		cat.Insert(context.Background(), category8)
+		cat.Insert(context.Background(), category9)
+		cat.Insert(context.Background(), category10)
+		cat.Insert(context.Background(), category11)
+		cat.Insert(context.Background(), category12)
+
 	}
 
 }
