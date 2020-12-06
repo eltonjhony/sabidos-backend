@@ -10,6 +10,7 @@ import (
 )
 
 const BAD_REQUEST_CODE = 1
+const SUCCESS = 2
 
 type AccountEntrypointHandler struct {
 	ObtainAccount entity.ObtainAccountUseCase
@@ -24,6 +25,7 @@ func NewAccountEntrypointHandler(r *gin.RouterGroup, obtainAccount entity.Obtain
 
 	r.GET("/account/uid/:uid", handler.FindAccountByUid)
 	r.GET("/account/nickname/:nickname", handler.FindAccountByNickName)
+	r.POST("/account/validate", handler.validate)
 	r.POST("/account/", handler.Create)
 }
 
@@ -42,6 +44,7 @@ func (accountEntrypointHandler *AccountEntrypointHandler) FindAccountByUid(c *gi
 
 func (accountEntrypointHandler *AccountEntrypointHandler) FindAccountByNickName(c *gin.Context) {
 	bfilter := bson.M{"nickname": c.Param("nickname")}
+
 	accounts, err := accountEntrypointHandler.ObtainAccount.Get(c.Request.Context(), bfilter)
 
 	if err != nil {
@@ -51,6 +54,28 @@ func (accountEntrypointHandler *AccountEntrypointHandler) FindAccountByNickName(
 	}
 
 	c.JSON(200, gin.H{"account": accounts})
+}
+
+func (accountEntrypointHandler *AccountEntrypointHandler) validate(c *gin.Context) {
+
+	var accountModel AccountModel
+
+	if err := c.ShouldBindJSON(&accountModel); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	bfilter := bson.M{"$or": []bson.M{bson.M{"nickname": accountModel.NickName}, bson.M{"uid": accountModel.Uid}}}
+
+	_, err := accountEntrypointHandler.ObtainAccount.Get(c.Request.Context(), bfilter)
+
+	if err == nil {
+		fmt.Println("\nNickname already exists", err)
+		c.JSON(400, gin.H{"code": BAD_REQUEST_CODE, "message": "Nickname already exists"})
+		return
+	}
+
+	c.JSON(200, gin.H{"code": SUCCESS, "message": "Nickname does not exists"})
 }
 
 func (accountEntrypointHandler *AccountEntrypointHandler) Create(c *gin.Context) {

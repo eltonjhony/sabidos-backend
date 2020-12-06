@@ -19,7 +19,7 @@ var collection *mongo.Collection
 var ctx = context.TODO()
 
 func ConnectToDB() *mongo.Client {
-	clientOptions := options.Client().ApplyURI("mongodb://db:27017")
+	clientOptions := options.Client().ApplyURI("mongodb://localhost:27017")
 	client, err := mongo.NewClient(clientOptions)
 	if err != nil {
 		log.Fatal(err)
@@ -93,18 +93,18 @@ func SetupModels(ac entity.AccountDataProvider, av entity.AvatarDataProvider, ca
 
 	}
 
-	category1 := entity.Category{1, "https://res.cloudinary.com/ddb86uj5i/image/upload/v1602365131/sabidos/categories/ic_random_category_hvxa1a.png", "Aleatório"}
-	category2 := entity.Category{2, "https://res.cloudinary.com/ddb86uj5i/image/upload/v1602367579/sabidos/categories/ic_curiosity_category_hjmqrl.png", "Curiosidades"}
-	category3 := entity.Category{3, "https://res.cloudinary.com/ddb86uj5i/image/upload/v1602367765/sabidos/categories/ic_sports_category_negv0m.png", "Esportes"}
-	category4 := entity.Category{4, "https://res.cloudinary.com/ddb86uj5i/image/upload/v1602367917/sabidos/categories/ic_science_category_qbtqsn.png", "Ciências"}
-	category5 := entity.Category{5, "https://res.cloudinary.com/ddb86uj5i/image/upload/v1602368011/sabidos/categories/ic_geography_category_urnzwm.png", "Geografia"}
-	category6 := entity.Category{6, "https://res.cloudinary.com/ddb86uj5i/image/upload/v1602368097/sabidos/categories/ic_history_category_myoxdd.png", "História"}
-	category7 := entity.Category{7, "https://res.cloudinary.com/ddb86uj5i/image/upload/v1602372897/sabidos/categories/ic_bio_category_yzm1li.png", "Biologia"}
-	category8 := entity.Category{8, "https://res.cloudinary.com/ddb86uj5i/image/upload/v1602372999/sabidos/categories/ic_literatura_category_me8qkt.png", "Literatura"}
-	category9 := entity.Category{9, "https://res.cloudinary.com/ddb86uj5i/image/upload/v1602373099/sabidos/categories/ic_religiao_category_se2p2j.png", "Religião"}
-	category10 := entity.Category{10, "https://res.cloudinary.com/ddb86uj5i/image/upload/v1602373303/sabidos/categories/ic_cine_category_jgzjet.png", "Cinema"}
-	category11 := entity.Category{11, "https://res.cloudinary.com/ddb86uj5i/image/upload/v1602373389/sabidos/categories/ic_tech_category_dqfmsj.png", "Tecnologia"}
-	category12 := entity.Category{12, "https://res.cloudinary.com/ddb86uj5i/image/upload/v1602373462/sabidos/categories/ic_games_category_fdhior.png", "Games"}
+	category1 := entity.Category{1, "https://res.cloudinary.com/ddb86uj5i/image/upload/v1602365131/sabidos/categories/ic_random_category_hvxa1a.png", "Aleatório", "https://res.cloudinary.com/ddb86uj5i/image/upload/v1602365131/sabidos/categories/ic_random_category_hvxa1a.png"}
+	category2 := entity.Category{2, "https://res.cloudinary.com/ddb86uj5i/image/upload/v1602367579/sabidos/categories/ic_curiosity_category_hjmqrl.png", "Curiosidades", "https://res.cloudinary.com/ddb86uj5i/image/upload/v1602367579/sabidos/categories/ic_curiosity_category_hjmqrl.png"}
+	category3 := entity.Category{3, "https://res.cloudinary.com/ddb86uj5i/image/upload/v1602367765/sabidos/categories/ic_sports_category_negv0m.png", "Esportes", "https://res.cloudinary.com/ddb86uj5i/image/upload/v1602367765/sabidos/categories/ic_sports_category_negv0m.png"}
+	category4 := entity.Category{4, "https://res.cloudinary.com/ddb86uj5i/image/upload/v1602367917/sabidos/categories/ic_science_category_qbtqsn.png", "Ciências", "https://res.cloudinary.com/ddb86uj5i/image/upload/v1602367917/sabidos/categories/ic_science_category_qbtqsn.png"}
+	category5 := entity.Category{5, "https://res.cloudinary.com/ddb86uj5i/image/upload/v1602368011/sabidos/categories/ic_geography_category_urnzwm.png", "Geografia", "https://res.cloudinary.com/ddb86uj5i/image/upload/v1602368011/sabidos/categories/ic_geography_category_urnzwm.png"}
+	category6 := entity.Category{6, "https://res.cloudinary.com/ddb86uj5i/image/upload/v1602368097/sabidos/categories/ic_history_category_myoxdd.png", "História", "https://res.cloudinary.com/ddb86uj5i/image/upload/v1602368097/sabidos/categories/ic_history_category_myoxdd.png"}
+	category7 := entity.Category{7, "https://res.cloudinary.com/ddb86uj5i/image/upload/v1602372897/sabidos/categories/ic_bio_category_yzm1li.png", "Biologia", "https://res.cloudinary.com/ddb86uj5i/image/upload/v1602372897/sabidos/categories/ic_bio_category_yzm1li.png"}
+	category8 := entity.Category{8, "https://res.cloudinary.com/ddb86uj5i/image/upload/v1602372999/sabidos/categories/ic_literatura_category_me8qkt.png", "Literatura", "https://res.cloudinary.com/ddb86uj5i/image/upload/v1602372999/sabidos/categories/ic_literatura_category_me8qkt.png"}
+	category9 := entity.Category{9, "https://res.cloudinary.com/ddb86uj5i/image/upload/v1602373099/sabidos/categories/ic_religiao_category_se2p2j.png", "Religião", "https://res.cloudinary.com/ddb86uj5i/image/upload/v1602373099/sabidos/categories/ic_religiao_category_se2p2j.png"}
+	category10 := entity.Category{10, "https://res.cloudinary.com/ddb86uj5i/image/upload/v1602373303/sabidos/categories/ic_cine_category_jgzjet.png", "Cinema", "https://res.cloudinary.com/ddb86uj5i/image/upload/v1602373303/sabidos/categories/ic_cine_category_jgzjet.png"}
+	category11 := entity.Category{11, "https://res.cloudinary.com/ddb86uj5i/image/upload/v1602373389/sabidos/categories/ic_tech_category_dqfmsj.png", "Tecnologia", "https://res.cloudinary.com/ddb86uj5i/image/upload/v1602373389/sabidos/categories/ic_tech_category_dqfmsj.png"}
+	category12 := entity.Category{12, "https://res.cloudinary.com/ddb86uj5i/image/upload/v1602373462/sabidos/categories/ic_games_category_fdhior.png", "Games", "https://res.cloudinary.com/ddb86uj5i/image/upload/v1602373462/sabidos/categories/ic_games_category_fdhior.png"}
 
 	catFilter := bson.M{"id": 1}
 

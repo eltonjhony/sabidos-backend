@@ -3,6 +3,7 @@ package AccountUseCase
 import (
 	"context"
 	"errors"
+	"math/rand"
 
 	"github.com/sabidos/core/entity"
 	"go.mongodb.org/mongo-driver/bson"
@@ -29,7 +30,7 @@ func (a *InserAccountUseCase) Insert(c context.Context, acc entity.Account) (acc
 	}
 
 	if acc.Avatar.Id == 0 {
-		defaultAvatar := entity.Avatar{1, ""}
+		defaultAvatar := entity.Avatar{rand.Intn(10), ""}
 		acc.SetAvatar(defaultAvatar)
 	}
 

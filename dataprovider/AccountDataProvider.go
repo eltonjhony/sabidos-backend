@@ -30,6 +30,7 @@ func (provider *AccountDataProvider) Get(ctx context.Context, filter bson.M) (re
 		return account, err
 	}
 	fmt.Printf("\nAccount found")
+	log.Printf("\nDocument with param  %s found", filter)
 
 	return account, err
 }

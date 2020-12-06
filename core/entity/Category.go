@@ -10,6 +10,7 @@ type Category struct {
 	Id          int    `json:"id"`
 	ImageUrl    string `json:"imageUrl"`
 	Description string `json:"description"`
+	IconUrl     string `json:"iconUrl"`
 }
 
 type CategoryDataProvider interface {
