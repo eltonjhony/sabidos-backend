@@ -9,8 +9,9 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-const BAD_REQUEST_CODE = 1
-const SUCCESS = 2
+const NICKNAME_ALREADY_IN_USE_CODE = 1
+const DATA_NOT_FOUND_CODE = 2
+const SUCCESS = 3
 
 type AccountEntrypointHandler struct {
 	ObtainAccount entity.ObtainAccountUseCase
@@ -49,7 +50,7 @@ func (accountEntrypointHandler *AccountEntrypointHandler) FindAccountByNickName(
 
 	if err != nil {
 		fmt.Println("Can't find account", err)
-		c.JSON(404, gin.H{"code": BAD_REQUEST_CODE, "message": "Account not found"})
+		c.JSON(404, gin.H{"code": DATA_NOT_FOUND_CODE, "message": "Account not found"})
 		return
 	}
 
@@ -71,7 +72,7 @@ func (accountEntrypointHandler *AccountEntrypointHandler) validate(c *gin.Contex
 
 	if err == nil {
 		fmt.Println("\nNickname already exists", err)
-		c.JSON(400, gin.H{"code": BAD_REQUEST_CODE, "message": "Nickname already exists"})
+		c.JSON(400, gin.H{"code": NICKNAME_ALREADY_IN_USE_CODE, "message": "Nickname already exists"})
 		return
 	}
 
