@@ -3,7 +3,6 @@ package AccountUseCase
 import (
 	"context"
 	"errors"
-	"math/rand"
 
 	"github.com/sabidos/core/entity"
 	"go.mongodb.org/mongo-driver/bson"
@@ -29,9 +28,8 @@ func (a *InserAccountUseCase) Insert(c context.Context, acc entity.Account) (acc
 		return account, errors.New("Account already exists")
 	}
 
-	if acc.Avatar.Id == 0 {
-		defaultAvatar := entity.Avatar{rand.Intn(10), ""}
-		acc.SetAvatar(defaultAvatar)
+	if acc.Avatar.Id == 0 || acc.IsAnonymous {
+		acc.SetRandomAvatar()
 	}
 
 	avatarFilter := bson.M{"id": acc.Avatar.Id}
@@ -43,7 +41,11 @@ func (a *InserAccountUseCase) Insert(c context.Context, acc entity.Account) (acc
 	}
 
 	acc.SetAvatar(avatar)
+	acc.SetXpFactor(3) // Every new account will be receiving fixed xpFactor
 
+	// Check if is an Anonymous user and complete acc info 
+	acc.CompleteAccountIfAnonymous()
+	
 	err = a.accountRepository.Insert(c, acc)
 
 	if err != nil {

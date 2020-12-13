@@ -90,7 +90,15 @@ func (accountEntrypointHandler *AccountEntrypointHandler) Create(c *gin.Context)
 
 	fmt.Println(accountModel)
 
-	account := entity.Account{accountModel.Uid, accountModel.Name, accountModel.NickName, entity.Avatar{accountModel.DefaultAvatarId, ""}, entity.Reputation{0, 0}, 0, 0, accountModel.Email, accountModel.IsAnonymous, accountModel.Phone}
+	account := entity.Account{
+		accountModel.Uid, 
+		accountModel.Name, 
+		accountModel.NickName, 
+		entity.Avatar{accountModel.DefaultAvatarId, ""}, 
+		entity.Reputation{1, 0}, 0, 0, 0, 
+		accountModel.Email, 
+		accountModel.IsAnonymous, 
+		accountModel.Phone}
 
 	account, err := accountEntrypointHandler.InsertAccount.Insert(c.Request.Context(), account)
 	if err != nil {

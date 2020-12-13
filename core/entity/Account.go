@@ -2,6 +2,9 @@ package entity
 
 import (
 	"context"
+	"time"
+	"math/rand"
+	"fmt"
 
 	"go.mongodb.org/mongo-driver/bson"
 )
@@ -12,6 +15,7 @@ type Account struct {
 	NickName      string     `json:"nickname"`
 	Avatar        Avatar     `json:"avatar"`
 	Reputation    Reputation `json:"reputation"`
+	XpFactor      int        `json:"xpFactor"`
 	TotalAnswered int        `json:"totalAnswered"`
 	TotalHits     int        `json:"totalHits"`
 	Email         string     `json:"email"`
@@ -21,6 +25,28 @@ type Account struct {
 
 func (acc *Account) SetAvatar(avatar Avatar) {
 	acc.Avatar = avatar
+}
+
+func (acc *Account) SetXpFactor(xpFactor int) {
+	acc.XpFactor = xpFactor
+}
+
+func (acc *Account) SetRandomAvatar() {
+	rand.Seed(time.Now().UnixNano())
+	min := 1
+	max := 15
+	// Get Random avatarId in Range
+	randomAvatarId := rand.Intn(max - min + 1) + min
+	fmt.Println("%s #%d", "Random avatar id", randomAvatarId)
+	acc.SetAvatar(Avatar{randomAvatarId, ""})
+}
+
+func (acc *Account) CompleteAccountIfAnonymous() {
+	if acc.IsAnonymous {
+		timestamp := time.Now().UnixNano() / int64(time.Millisecond)
+		acc.Name = fmt.Sprintf("%s #%d", "Player", timestamp)
+		acc.NickName = fmt.Sprintf("%d", timestamp)
+	}
 }
 
 type ObtainAccountUseCase interface {
