@@ -39,6 +39,21 @@ func (provider *AvatarDataProvider) Get(ctx context.Context, filter bson.M) (res
 	return avatars, err
 }
 
+func (provider *AvatarDataProvider) Count(ctx context.Context, filter bson.M) (res int64, err error) {
+	collection := provider.Conn.Database("sabidos").Collection("avatars")
+
+	fmt.Printf("Starting count avatars")
+
+	itemCount, err := collection.CountDocuments(ctx, filter)
+	if err != nil {
+		log.Fatal("Error on Counting all documents", err)
+	}
+
+	fmt.Printf("Getting total count of avatars %d", itemCount)
+
+	return itemCount, err
+}
+
 func (provider *AvatarDataProvider) Insert(ctx context.Context, acc entity.Avatar) (err error) {
 	avatarsCollection := provider.Conn.Database("sabidos").Collection("avatars")
 

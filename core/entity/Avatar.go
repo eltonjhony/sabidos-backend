@@ -13,6 +13,7 @@ type Avatar struct {
 
 type AvatarDataProvider interface {
 	Get(ctx context.Context, filter bson.M) (avatar []Avatar, err error)
+	Count(ctx context.Context, filter bson.M) (itemCount int64, err error)
 	Insert(ctx context.Context, avatar Avatar) error
 	FindOne(ctx context.Context, filter bson.M) (avatar Avatar, err error)
 }

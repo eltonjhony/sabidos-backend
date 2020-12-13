@@ -31,13 +31,13 @@ func (acc *Account) SetXpFactor(xpFactor int) {
 	acc.XpFactor = xpFactor
 }
 
-func (acc *Account) SetRandomAvatar() {
+func (acc *Account) SetRandomAvatar(avatarCount int64) {
 	rand.Seed(time.Now().UnixNano())
 	min := 1
-	max := 15
+	max := int(avatarCount)
 	// Get Random avatarId in Range
 	randomAvatarId := rand.Intn(max - min + 1) + min
-	fmt.Println("%s #%d", "Random avatar id", randomAvatarId)
+	fmt.Println("Random avatar id ", randomAvatarId)
 	acc.SetAvatar(Avatar{randomAvatarId, ""})
 }
 

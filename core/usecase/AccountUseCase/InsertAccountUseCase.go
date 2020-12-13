@@ -29,7 +29,11 @@ func (a *InserAccountUseCase) Insert(c context.Context, acc entity.Account) (acc
 	}
 
 	if acc.Avatar.Id == 0 || acc.IsAnonymous {
-		acc.SetRandomAvatar()
+		avatarCount, err := a.avatarDataProvider.Count(c, bson.M{})
+		if err != nil {
+			return account, err
+		}
+		acc.SetRandomAvatar(avatarCount)
 	}
 
 	avatarFilter := bson.M{"id": acc.Avatar.Id}
