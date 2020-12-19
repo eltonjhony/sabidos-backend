@@ -39,7 +39,7 @@ func ConnectToDB() *mongo.Client {
 	return client
 }
 
-func SetupModels(ac entity.AccountDataProvider, av entity.AvatarDataProvider, cat entity.CategoryDataProvider, conn *mongo.Client) {
+func SetupModels(ac entity.AccountDataProvider, av entity.AvatarDataProvider, cat entity.CategoryDataProvider, qz entity.QuizDataProvider, conn *mongo.Client) {
 	quickstartDatabase := conn.Database("sabidos")
 	quickstartDatabase.Collection("accounts")
 
@@ -126,6 +126,40 @@ func SetupModels(ac entity.AccountDataProvider, av entity.AvatarDataProvider, ca
 		cat.Insert(context.Background(), category12)
 
 	}
+
+	quiz1 := entity.Quiz{
+		ImageUrl: "https://res.cloudinary.com/ddb86uj5i/image/upload/v1602710672/sabidos/quiz/turtle_jgcttl.jpg",
+		Description: "Qual ciência estuda especificamente a vida animal e vegetal no mar?",
+		QuizLimitInSeconds: 15,
+		Category: category4,
+		Alternatives: []entity.Alternative{},
+		Explanation: entity.Explanation{
+			Description: "Biologia marinha é a especialidade biológica que se encarrega de entender os organismos que vivem em ecossistemas de água salgada e as relações dos mesmos com o ambiente. Os oceanos cobrem mais de 71% da superfície da Terra e, assim como o ambiente terrestre é diverso, os oceanos também são. Por isso encontramos as mais diferentes formas de vida no mar, desde o plâncton microscópico, incluindo o fitoplâncton, de enorme importância para a produção primária.",
+			Resource: "Wikipédia.org",
+		},
+	}
+	quiz1.AddAlternative(entity.Alternative{
+		Description: "Ictiologia",
+		IsCorrect: false,
+		PercentageAnswered: 10,
+	})
+	quiz1.AddAlternative(entity.Alternative{
+		Description: "Biologia Marinha",
+		IsCorrect: true,
+		PercentageAnswered: 80,
+	})
+	quiz1.AddAlternative(entity.Alternative{
+		Description: "Bioquímica",
+		IsCorrect: false,
+		PercentageAnswered: 3,
+	})
+	quiz1.AddAlternative(entity.Alternative{
+		Description: "Hipertologia",
+		IsCorrect: false,
+		PercentageAnswered: 7,
+	})
+
+	qz.Insert(context.Background(), quiz1)
 
 }
 
