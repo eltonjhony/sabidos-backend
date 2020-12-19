@@ -6,6 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/sabidos/core/entity"
+	"github.com/sabidos/entrypoint/model"
 	"go.mongodb.org/mongo-driver/bson"
 )
 
@@ -59,7 +60,7 @@ func (accountEntrypointHandler *AccountEntrypointHandler) FindAccountByNickName(
 
 func (accountEntrypointHandler *AccountEntrypointHandler) validate(c *gin.Context) {
 
-	var accountModel AccountModel
+	var accountModel model.AccountModel
 
 	if err := c.ShouldBindJSON(&accountModel); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -81,7 +82,7 @@ func (accountEntrypointHandler *AccountEntrypointHandler) validate(c *gin.Contex
 
 func (accountEntrypointHandler *AccountEntrypointHandler) Create(c *gin.Context) {
 
-	var accountModel AccountModel
+	var accountModel model.AccountModel
 
 	if err := c.ShouldBindJSON(&accountModel); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -91,14 +92,16 @@ func (accountEntrypointHandler *AccountEntrypointHandler) Create(c *gin.Context)
 	fmt.Println(accountModel)
 
 	account := entity.Account{
-		accountModel.Uid, 
-		accountModel.Name, 
-		accountModel.NickName, 
-		entity.Avatar{accountModel.DefaultAvatarId, ""}, 
-		entity.Reputation{1, 0}, 0, 0, 0, 
-		accountModel.Email, 
-		accountModel.IsAnonymous, 
-		accountModel.Phone}
+		Uid: accountModel.Uid, 
+		Name: accountModel.Name, 
+		NickName: accountModel.NickName,
+		Avatar: entity.Avatar{
+			Id: accountModel.DefaultAvatarId,
+		},
+		Email: accountModel.Email, 
+		IsAnonymous: accountModel.IsAnonymous, 
+		Phone: accountModel.Phone,
+	}
 
 	account, err := accountEntrypointHandler.InsertAccount.Insert(c.Request.Context(), account)
 	if err != nil {

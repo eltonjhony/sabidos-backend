@@ -3,6 +3,9 @@ package AccountUseCase
 import (
 	"context"
 	"errors"
+	"math/rand"
+	"time"
+	"fmt"
 
 	"github.com/sabidos/core/entity"
 	"go.mongodb.org/mongo-driver/bson"
@@ -28,33 +31,66 @@ func (a *InserAccountUseCase) Insert(c context.Context, acc entity.Account) (acc
 		return account, errors.New("Account already exists")
 	}
 
-	if acc.Avatar.Id == 0 || acc.IsAnonymous {
-		avatarCount, err := a.avatarDataProvider.Count(c, bson.M{})
-		if err != nil {
-			return account, err
-		}
-		acc.SetRandomAvatar(avatarCount)
-	}
-
-	avatarFilter := bson.M{"id": acc.Avatar.Id}
-
-	avatar, _ := a.avatarDataProvider.FindOne(c, avatarFilter)
-
-	if avatar.Id == 0 {
-		return account, errors.New("Avatar does not exists")
-	}
-
-	acc.SetAvatar(avatar)
-	acc.SetXpFactor(3) // Every new account will be receiving fixed xpFactor
-
-	// Check if is an Anonymous user and complete acc info 
-	acc.CompleteAccountIfAnonymous()
+	account = acc
 	
-	err = a.accountRepository.Insert(c, acc)
+	avatar, err := a.getAccountAvatar(c, acc)
+	if err != nil {
+		return account, err
+	}
+
+	account.SetAvatar(avatar)
+	account.SetTotalAnswered(0)
+	account.SetTotalHits(0)
+	account.SetXpFactor(3)
+	account.SetReputation(1, 0)
+	account.CompleteAccountIfAnonymous()
+	
+	err = a.accountRepository.Insert(c, account)
 
 	if err != nil {
 		return account, err
 	}
 
-	return acc, err
+	return account, err
+}
+
+func (a *InserAccountUseCase) getAccountAvatar(c context.Context, acc entity.Account) (res entity.Avatar, err error)  {
+	var result entity.Avatar
+	if acc.Avatar.Id == 0 || acc.IsAnonymous {
+		avatar, err := a.getRandomAvatar(c)
+		if err != nil {
+			return res, err
+		}
+
+		result = avatar
+	} else {
+		avatarFilter := bson.M{"id": acc.Avatar.Id}
+		avatar, err := a.avatarDataProvider.FindOne(c, avatarFilter)
+		if avatar.Id == 0 || err != nil {
+			return res, err
+		}
+
+		result = avatar
+	}
+
+	return result, err
+}
+
+func (a *InserAccountUseCase) getRandomAvatar(c context.Context) (res entity.Avatar, err error) {
+	avatarCount, err := a.avatarDataProvider.Count(c, bson.M{})
+	if err != nil {
+		return res, err
+	}
+	
+	rand.Seed(time.Now().UnixNano())
+	min := 1
+	max := int(avatarCount)
+	
+	// Get Random avatarId in Range
+	randomAvatarId := rand.Intn(max - min + 1) + min
+	fmt.Println("Random avatar id ", randomAvatarId)
+
+	avatarFilter := bson.M{"id": randomAvatarId}
+	return a.avatarDataProvider.FindOne(c, avatarFilter)
+
 }

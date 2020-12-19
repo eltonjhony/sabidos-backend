@@ -3,11 +3,23 @@ package entity
 import (
 	"context"
 	"time"
-	"math/rand"
 	"fmt"
-
+	
 	"go.mongodb.org/mongo-driver/bson"
 )
+
+type ObtainAccountUseCase interface {
+	Get(ctx context.Context, filter bson.M) (acc Account, err error)
+}
+
+type InsertAccountUseCase interface {
+	Insert(ctx context.Context, acc Account) (account Account, err error)
+}
+
+type AccountDataProvider interface {
+	Get(ctx context.Context, filter bson.M) (account Account, err error)
+	Insert(ctx context.Context, acc Account) error
+}
 
 type Account struct {
 	Uid           string     `json:"uid"`
@@ -31,14 +43,19 @@ func (acc *Account) SetXpFactor(xpFactor int) {
 	acc.XpFactor = xpFactor
 }
 
-func (acc *Account) SetRandomAvatar(avatarCount int64) {
-	rand.Seed(time.Now().UnixNano())
-	min := 1
-	max := int(avatarCount)
-	// Get Random avatarId in Range
-	randomAvatarId := rand.Intn(max - min + 1) + min
-	fmt.Println("Random avatar id ", randomAvatarId)
-	acc.SetAvatar(Avatar{randomAvatarId, ""})
+func (acc *Account) SetReputation(level int, stars int) {
+	acc.Reputation = Reputation{
+		Level: level,
+		Stars: stars,
+	}
+}
+
+func (acc *Account) SetTotalAnswered(totalAnswered int) {
+	acc.TotalAnswered = totalAnswered
+}
+
+func (acc *Account) SetTotalHits(totalHits int)  {
+	acc.TotalHits = totalHits
 }
 
 func (acc *Account) CompleteAccountIfAnonymous() {
@@ -47,17 +64,4 @@ func (acc *Account) CompleteAccountIfAnonymous() {
 		acc.Name = fmt.Sprintf("%s #%d", "Player", timestamp)
 		acc.NickName = fmt.Sprintf("%d", timestamp)
 	}
-}
-
-type ObtainAccountUseCase interface {
-	Get(ctx context.Context, filter bson.M) (acc Account, err error)
-}
-
-type InsertAccountUseCase interface {
-	Insert(ctx context.Context, acc Account) (account Account, err error)
-}
-
-type AccountDataProvider interface {
-	Get(ctx context.Context, filter bson.M) (account Account, err error)
-	Insert(ctx context.Context, acc Account) error
 }
