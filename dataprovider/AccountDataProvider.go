@@ -50,3 +50,36 @@ func (provider *AccountDataProvider) Insert(ctx context.Context, acc entity.Acco
 
 	return
 }
+
+func (provider *AccountDataProvider) Update(ctx context.Context, acc entity.Account) (err error) {
+	accountsCollection := provider.Conn.Database("sabidos").Collection("accounts")
+
+	fmt.Printf("\nTrying to update: %+v\n", acc)
+
+	bfilter := bson.M{"uid": bson.M{"$eq": acc.Uid}}
+
+	update := bson.M{
+		"$set": bson.M{
+			"name":        acc.Name,
+			"email":       acc.Email,
+			"phone":       acc.Phone,
+			"isanonymous": acc.IsAnonymous,
+		},
+	}
+
+	result, err := accountsCollection.UpdateOne(
+		ctx,
+		bfilter,
+		update,
+	)
+
+	if err != nil {
+		log.Panic("Error on Updating the document", err)
+		return err
+	}
+
+	fmt.Printf("\nUpdated %v document on account collection!\n", result.UpsertedID)
+	fmt.Printf("\nUpdate: %+v\n", acc.NickName)
+
+	return
+}

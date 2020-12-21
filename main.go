@@ -9,8 +9,8 @@ import (
 	_accountUsecase "github.com/sabidos/core/usecase/AccountUseCase"
 	_avatarUsecase "github.com/sabidos/core/usecase/AvatarUseCase"
 	_categoryUsecase "github.com/sabidos/core/usecase/CategoryUseCase"
-	_rankingUsecase "github.com/sabidos/core/usecase/RankingUseCase"
 	_quizUseCase "github.com/sabidos/core/usecase/QuizUseCase"
+	_rankingUsecase "github.com/sabidos/core/usecase/RankingUseCase"
 
 	_dataprovider "github.com/sabidos/dataprovider"
 
@@ -42,7 +42,9 @@ func main() {
 	accountDataProvider := _dataprovider.NewAccountDataProvider(db)
 	obtainAccountUseCase := _accountUsecase.NewObtainAccountUsecase(accountDataProvider)
 	insertAccountUseCase := _accountUsecase.NewInsertAccountUsecase(accountDataProvider, avatarDataProvider)
-	_entrypoint.NewAccountEntrypointHandler(api, obtainAccountUseCase, insertAccountUseCase)
+	validateAccountUseCase := _accountUsecase.NewValidateAccountUsecase(accountDataProvider)
+	updateAccountUseCase := _accountUsecase.NewUpdateAccountUsecase(accountDataProvider)
+	_entrypoint.NewAccountEntrypointHandler(api, obtainAccountUseCase, insertAccountUseCase, validateAccountUseCase, updateAccountUseCase)
 
 	// Constructing quiz round Resource
 	quizDataProvider := _dataprovider.NewQuizDataProvider(db)

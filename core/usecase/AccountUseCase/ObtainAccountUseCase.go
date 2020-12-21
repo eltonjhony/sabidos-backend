@@ -18,9 +18,23 @@ func NewObtainAccountUsecase(a entity.AccountDataProvider) entity.ObtainAccountU
 	}
 }
 
-func (a *ObtainAccountUseCase) Get(c context.Context, filter bson.M) (acc entity.Account, err error) {
+func (a *ObtainAccountUseCase) GetByNickname(c context.Context, nickname string) (acc entity.Account, err error) {
 
-	acc, err = a.accountRepository.Get(c, filter)
+	bfilter := bson.M{"nickname": nickname}
+
+	acc, err = a.accountRepository.Get(c, bfilter)
+	if err != nil {
+		fmt.Printf("Error %s ", err)
+		return acc, err
+	}
+	return acc, err
+}
+
+func (a *ObtainAccountUseCase) GetByUid(c context.Context, uid string) (acc entity.Account, err error) {
+
+	bfilter := bson.M{"uid": uid}
+
+	acc, err = a.accountRepository.Get(c, bfilter)
 	if err != nil {
 		fmt.Printf("Error %s ", err)
 		return acc, err

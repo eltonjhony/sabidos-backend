@@ -2,23 +2,33 @@ package entity
 
 import (
 	"context"
-	"time"
 	"fmt"
-	
+	"time"
+
 	"go.mongodb.org/mongo-driver/bson"
 )
 
 type ObtainAccountUseCase interface {
-	Get(ctx context.Context, filter bson.M) (acc Account, err error)
+	GetByNickname(ctx context.Context, nickname string) (acc Account, err error)
+	GetByUid(ctx context.Context, uid string) (acc Account, err error)
 }
 
 type InsertAccountUseCase interface {
 	Insert(ctx context.Context, acc Account) (account Account, err error)
 }
 
+type UpdateAccountUseCase interface {
+	Update(ctx context.Context, uid string, acc Account) (account Account, err error)
+}
+
+type ValidateAccountUseCase interface {
+	Validate(c context.Context, nickname string, uid string) error
+}
+
 type AccountDataProvider interface {
 	Get(ctx context.Context, filter bson.M) (account Account, err error)
 	Insert(ctx context.Context, acc Account) error
+	Update(ctx context.Context, acc Account) error
 }
 
 type Account struct {
@@ -54,7 +64,7 @@ func (acc *Account) SetTotalAnswered(totalAnswered int) {
 	acc.TotalAnswered = totalAnswered
 }
 
-func (acc *Account) SetTotalHits(totalHits int)  {
+func (acc *Account) SetTotalHits(totalHits int) {
 	acc.TotalHits = totalHits
 }
 
