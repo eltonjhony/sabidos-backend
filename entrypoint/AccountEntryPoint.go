@@ -20,7 +20,8 @@ type AccountEntrypointHandler struct {
 	UpdateAccount   entity.UpdateAccountUseCase
 }
 
-func NewAccountEntrypointHandler(r *gin.RouterGroup, obtainAccount entity.ObtainAccountUseCase, insertAcc entity.InsertAccountUseCase, validateAcc entity.ValidateAccountUseCase, updateAcc entity.UpdateAccountUseCase) {
+func NewAccountEntrypointHandler(r *gin.RouterGroup, obtainAccount entity.ObtainAccountUseCase, insertAcc entity.InsertAccountUseCase,
+	validateAcc entity.ValidateAccountUseCase, updateAcc entity.UpdateAccountUseCase) {
 	handler := &AccountEntrypointHandler{
 		ObtainAccount:   obtainAccount,
 		InsertAccount:   insertAcc,

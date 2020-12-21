@@ -5,7 +5,6 @@ import (
 	"errors"
 
 	"github.com/sabidos/core/entity"
-	"go.mongodb.org/mongo-driver/bson"
 )
 
 type UpdateAccountUseCase struct {
@@ -20,8 +19,7 @@ func NewUpdateAccountUsecase(acc entity.AccountDataProvider) entity.UpdateAccoun
 
 func (a *UpdateAccountUseCase) Update(c context.Context, uid string, acc entity.Account) (entity.Account, error) {
 
-	bfilter := bson.M{"uid": uid}
-	account, err := a.accountRepository.Get(c, bfilter)
+	account, err := a.accountRepository.GetByUid(c, uid)
 
 	if err != nil || len(account.Uid) <= 0 {
 		return account, errors.New("Account not found")

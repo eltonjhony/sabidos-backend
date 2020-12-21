@@ -1,6 +1,6 @@
 package dataprovider
 
-import(
+import (
 	"context"
 	"fmt"
 	"log"
@@ -20,19 +20,22 @@ func NewQuizDataProvider(Conn *mongo.Client) entity.QuizDataProvider {
 	return &QuizDataProvider{Conn}
 }
 
-func (provider *QuizDataProvider) Get(ctx context.Context, filter bson.M, limit int64) (res []entity.Quiz, err error) {
+func (provider *QuizDataProvider) GetByCategory(ctx context.Context, categoryId int, limit int64) (res []entity.Quiz, err error) {
 	var quizRound []entity.Quiz
 	collection := provider.Conn.Database("sabidos").Collection("quiz")
 
 	options := options.Find()
-	
+
 	// Sort by `_id` field descending
 	options.SetSort(bson.D{{"_id", -1}})
-	
-	// Limit the amount of documents being returned 
+
+	// Limit the amount of documents being returned
 	options.SetLimit(limit)
 
-	cur, err := collection.Find(ctx, filter, options)
+	// Filter params
+	bfilter := bson.M{"category.id": categoryId}
+
+	cur, err := collection.Find(ctx, bfilter, options)
 
 	if err != nil {
 		log.Fatal("Error on Finding all the documents", err)
@@ -71,4 +74,3 @@ func (provider *QuizDataProvider) Insert(ctx context.Context, acc entity.Quiz) (
 
 	return
 }
-

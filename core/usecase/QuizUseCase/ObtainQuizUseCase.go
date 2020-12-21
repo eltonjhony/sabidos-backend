@@ -2,12 +2,11 @@ package QuizUseCase
 
 import (
 	"context"
-	"fmt"
 	"errors"
+	"fmt"
 	"strconv"
 
 	"github.com/sabidos/core/entity"
-	"go.mongodb.org/mongo-driver/bson"
 )
 
 type ObtainQuizUseCase struct {
@@ -29,13 +28,9 @@ func (a *ObtainQuizUseCase) ObtainQuizRoundFor(ctx context.Context, nickname str
 
 	catId, err := strconv.Atoi(categoryId)
 	if err != nil {
-        return nil, errors.New("Error converting category id")
+		return nil, errors.New("Error converting category id")
 	}
-	
-	// Filter params
-	bfilter := bson.M{"category.id": catId}
-	recordsLimit := int64(10)
 
-	quizRound, err := a.quizRepository.Get(ctx, bfilter, recordsLimit)
+	quizRound, err := a.quizRepository.GetByCategory(ctx, catId, 10)
 	return quizRound, err
 }

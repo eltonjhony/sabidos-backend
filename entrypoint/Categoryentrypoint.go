@@ -5,7 +5,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/sabidos/core/entity"
-	"go.mongodb.org/mongo-driver/bson"
 )
 
 type CategoryEntrypointHandler struct {
@@ -17,13 +16,13 @@ func NewCategoryEntrypointHandler(r *gin.RouterGroup, obtainCategory entity.Obta
 		ObtainCategory: obtainCategory,
 	}
 
-	r.GET("/categories", handler.FindCategory)
+	r.GET("/categories", handler.FindAllCategories)
 
 }
 
-func (catergoryEntrypointHandler *CategoryEntrypointHandler) FindCategory(c *gin.Context) {
-	bfilter := bson.M{}
-	categories, err := catergoryEntrypointHandler.ObtainCategory.Get(c.Request.Context(), bfilter)
+func (catergoryEntrypointHandler *CategoryEntrypointHandler) FindAllCategories(c *gin.Context) {
+
+	categories, err := catergoryEntrypointHandler.ObtainCategory.GetAll(c.Request.Context())
 
 	if err != nil {
 		fmt.Println("Can't find Category", err)

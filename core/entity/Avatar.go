@@ -2,8 +2,6 @@ package entity
 
 import (
 	"context"
-
-	"go.mongodb.org/mongo-driver/bson"
 )
 
 type Avatar struct {
@@ -12,12 +10,12 @@ type Avatar struct {
 }
 
 type AvatarDataProvider interface {
-	Get(ctx context.Context, filter bson.M) (avatar []Avatar, err error)
-	Count(ctx context.Context, filter bson.M) (itemCount int64, err error)
+	GetAll(ctx context.Context) (avatar []Avatar, err error)
+	Count(ctx context.Context) (itemCount int64, err error)
 	Insert(ctx context.Context, avatar Avatar) error
-	FindOne(ctx context.Context, filter bson.M) (avatar Avatar, err error)
+	FindById(ctx context.Context, id int) (avatar Avatar, err error)
 }
 
 type ObtainAvatarUseCase interface {
-	Get(ctx context.Context, filter bson.M) (avatar []Avatar, err error)
+	GetAll(ctx context.Context) (avatar []Avatar, err error)
 }

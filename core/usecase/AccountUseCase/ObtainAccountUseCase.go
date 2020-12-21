@@ -5,7 +5,6 @@ import (
 	"fmt"
 
 	"github.com/sabidos/core/entity"
-	"go.mongodb.org/mongo-driver/bson"
 )
 
 type ObtainAccountUseCase struct {
@@ -20,9 +19,7 @@ func NewObtainAccountUsecase(a entity.AccountDataProvider) entity.ObtainAccountU
 
 func (a *ObtainAccountUseCase) GetByNickname(c context.Context, nickname string) (acc entity.Account, err error) {
 
-	bfilter := bson.M{"nickname": nickname}
-
-	acc, err = a.accountRepository.Get(c, bfilter)
+	acc, err = a.accountRepository.GetByNickname(c, nickname)
 	if err != nil {
 		fmt.Printf("Error %s ", err)
 		return acc, err
@@ -32,9 +29,7 @@ func (a *ObtainAccountUseCase) GetByNickname(c context.Context, nickname string)
 
 func (a *ObtainAccountUseCase) GetByUid(c context.Context, uid string) (acc entity.Account, err error) {
 
-	bfilter := bson.M{"uid": uid}
-
-	acc, err = a.accountRepository.Get(c, bfilter)
+	acc, err = a.accountRepository.GetByUid(c, uid)
 	if err != nil {
 		fmt.Printf("Error %s ", err)
 		return acc, err

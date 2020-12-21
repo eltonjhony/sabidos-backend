@@ -5,7 +5,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/sabidos/core/entity"
-	"go.mongodb.org/mongo-driver/bson"
 )
 
 type AvatarEntrypointHandler struct {
@@ -18,12 +17,11 @@ func NewAvatarEntrypointHandler(r *gin.RouterGroup, obtainAvatar entity.ObtainAv
 	}
 
 	r.GET("/avatars", handler.FindAvatar)
-
 }
 
 func (avatarEntrypointHandler *AvatarEntrypointHandler) FindAvatar(c *gin.Context) {
-	bfilter := bson.M{}
-	avatars, err := avatarEntrypointHandler.ObtainAvatar.Get(c.Request.Context(), bfilter)
+
+	avatars, err := avatarEntrypointHandler.ObtainAvatar.GetAll(c.Request.Context())
 
 	if err != nil {
 		fmt.Println("Can't find Avatar", err)

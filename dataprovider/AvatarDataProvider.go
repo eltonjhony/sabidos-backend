@@ -19,10 +19,13 @@ func NewAvatarDataProvider(Conn *mongo.Client) entity.AvatarDataProvider {
 	return &AvatarDataProvider{Conn}
 }
 
-func (provider *AvatarDataProvider) Get(ctx context.Context, filter bson.M) (res []entity.Avatar, err error) {
+func (provider *AvatarDataProvider) GetAll(ctx context.Context) (res []entity.Avatar, err error) {
 	var avatars []entity.Avatar
 	collection := provider.Conn.Database("sabidos").Collection("avatars")
-	cur, err := collection.Find(context.TODO(), filter)
+
+	bfilter := bson.M{}
+
+	cur, err := collection.Find(context.TODO(), bfilter)
 	if err != nil {
 		log.Fatal("Error on Finding all the documents", err)
 	}
@@ -39,12 +42,14 @@ func (provider *AvatarDataProvider) Get(ctx context.Context, filter bson.M) (res
 	return avatars, err
 }
 
-func (provider *AvatarDataProvider) Count(ctx context.Context, filter bson.M) (res int64, err error) {
+func (provider *AvatarDataProvider) Count(ctx context.Context) (res int64, err error) {
 	collection := provider.Conn.Database("sabidos").Collection("avatars")
 
 	fmt.Printf("Starting count avatars")
 
-	itemCount, err := collection.CountDocuments(ctx, filter)
+	bfilter := bson.M{}
+
+	itemCount, err := collection.CountDocuments(ctx, bfilter)
 	if err != nil {
 		log.Fatal("Error on Counting all documents", err)
 	}
@@ -70,14 +75,16 @@ func (provider *AvatarDataProvider) Insert(ctx context.Context, acc entity.Avata
 	return
 }
 
-func (provider *AvatarDataProvider) FindOne(ctx context.Context, filter bson.M) (res entity.Avatar, err error) {
+func (provider *AvatarDataProvider) FindById(ctx context.Context, id int) (res entity.Avatar, err error) {
 	var avatar entity.Avatar
 	fmt.Printf("\nSearching for Avatar")
 
 	collection := provider.Conn.Database("sabidos").Collection("avatars")
 
-	if err = collection.FindOne(ctx, filter).Decode(&avatar); err != nil {
-		log.Printf("\nDocument with param  %s not found", filter)
+	bfilter := bson.M{"id": id}
+
+	if err = collection.FindOne(ctx, bfilter).Decode(&avatar); err != nil {
+		log.Printf("\nDocument with param  %s not found", bfilter)
 		return avatar, err
 	}
 

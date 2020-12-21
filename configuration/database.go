@@ -6,7 +6,6 @@ import (
 
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"github.com/sabidos/core/entity"
-	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
@@ -59,9 +58,7 @@ func SetupModels(ac entity.AccountDataProvider, av entity.AvatarDataProvider, ca
 	avatar14 := entity.Avatar{14, "https://res.cloudinary.com/ddb86uj5i/image/upload/v1604167774/sabidos/avatar/14.png"}
 	avatar15 := entity.Avatar{15, "https://res.cloudinary.com/ddb86uj5i/image/upload/v1604167774/sabidos/avatar/15.png"}
 
-	bfilter := bson.M{"$or": []bson.M{bson.M{"nickname": "smash"}, bson.M{"uid": ""}}}
-
-	account, _ := ac.Get(context.Background(), bfilter)
+	account, _ := ac.GetByIdentifier(context.Background(), "smash", "")
 
 	if len(account.NickName) == 0 {
 		newAcc := entity.Account{"yiXtigKxtEVKl5mBh4qB7ZKumBs1", "Hulk", "Smash", entity.Avatar{1, ""}, entity.Reputation{5, 10}, 3, 100, 100, "email", true, "tel"}
@@ -69,9 +66,7 @@ func SetupModels(ac entity.AccountDataProvider, av entity.AvatarDataProvider, ca
 
 	}
 
-	avatarFilter := bson.M{"id": 1}
-
-	avatar, _ := av.FindOne(context.Background(), avatarFilter)
+	avatar, _ := av.FindById(context.Background(), 1)
 
 	if avatar.Id == 0 {
 
@@ -106,9 +101,7 @@ func SetupModels(ac entity.AccountDataProvider, av entity.AvatarDataProvider, ca
 	category11 := entity.Category{11, "https://res.cloudinary.com/ddb86uj5i/image/upload/v1606391087/sabidos/categories/tecnologia_w8skxx.jpg", "Tecnologia", "https://res.cloudinary.com/ddb86uj5i/image/upload/v1602373389/sabidos/categories/ic_tech_category_dqfmsj.png"}
 	category12 := entity.Category{12, "https://res.cloudinary.com/ddb86uj5i/image/upload/v1606390699/sabidos/categories/games_yixylw.jpg", "Games", "https://res.cloudinary.com/ddb86uj5i/image/upload/v1602373462/sabidos/categories/ic_games_category_fdhior.png"}
 
-	catFilter := bson.M{"id": 1}
-
-	category, _ := cat.FindOne(context.Background(), catFilter)
+	category, _ := cat.FindById(context.Background(), 1)
 
 	if category.Id == 0 {
 
@@ -128,34 +121,34 @@ func SetupModels(ac entity.AccountDataProvider, av entity.AvatarDataProvider, ca
 	}
 
 	quiz1 := entity.Quiz{
-		ImageUrl: "https://res.cloudinary.com/ddb86uj5i/image/upload/v1602710672/sabidos/quiz/turtle_jgcttl.jpg",
-		Description: "Qual ciência estuda especificamente a vida animal e vegetal no mar?",
+		ImageUrl:           "https://res.cloudinary.com/ddb86uj5i/image/upload/v1602710672/sabidos/quiz/turtle_jgcttl.jpg",
+		Description:        "Qual ciência estuda especificamente a vida animal e vegetal no mar?",
 		QuizLimitInSeconds: 15,
-		Category: category4,
-		Alternatives: []entity.Alternative{},
+		Category:           category4,
+		Alternatives:       []entity.Alternative{},
 		Explanation: entity.Explanation{
 			Description: "Biologia marinha é a especialidade biológica que se encarrega de entender os organismos que vivem em ecossistemas de água salgada e as relações dos mesmos com o ambiente. Os oceanos cobrem mais de 71% da superfície da Terra e, assim como o ambiente terrestre é diverso, os oceanos também são. Por isso encontramos as mais diferentes formas de vida no mar, desde o plâncton microscópico, incluindo o fitoplâncton, de enorme importância para a produção primária.",
-			Resource: "Wikipédia.org",
+			Resource:    "Wikipédia.org",
 		},
 	}
 	quiz1.AddAlternative(entity.Alternative{
-		Description: "Ictiologia",
-		IsCorrect: false,
+		Description:        "Ictiologia",
+		IsCorrect:          false,
 		PercentageAnswered: 10,
 	})
 	quiz1.AddAlternative(entity.Alternative{
-		Description: "Biologia Marinha",
-		IsCorrect: true,
+		Description:        "Biologia Marinha",
+		IsCorrect:          true,
 		PercentageAnswered: 80,
 	})
 	quiz1.AddAlternative(entity.Alternative{
-		Description: "Bioquímica",
-		IsCorrect: false,
+		Description:        "Bioquímica",
+		IsCorrect:          false,
 		PercentageAnswered: 3,
 	})
 	quiz1.AddAlternative(entity.Alternative{
-		Description: "Hipertologia",
-		IsCorrect: false,
+		Description:        "Hipertologia",
+		IsCorrect:          false,
 		PercentageAnswered: 7,
 	})
 

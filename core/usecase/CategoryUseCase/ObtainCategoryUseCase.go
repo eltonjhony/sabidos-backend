@@ -5,7 +5,6 @@ import (
 	"fmt"
 
 	"github.com/sabidos/core/entity"
-	"go.mongodb.org/mongo-driver/bson"
 )
 
 type ObtainCategoryUseCase struct {
@@ -18,9 +17,9 @@ func NewObtainCategoryUsecase(a entity.CategoryDataProvider) entity.ObtainCatego
 	}
 }
 
-func (a *ObtainCategoryUseCase) Get(c context.Context, filter bson.M) (av []entity.Category, err error) {
+func (a *ObtainCategoryUseCase) GetAll(c context.Context) (av []entity.Category, err error) {
 
-	av, err = a.categoryRepository.Get(c, filter)
+	av, err = a.categoryRepository.GetAll(c)
 	if err != nil {
 		fmt.Printf("Error %s ", err)
 		return av, err

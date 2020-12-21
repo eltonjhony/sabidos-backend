@@ -4,8 +4,6 @@ import (
 	"context"
 	"fmt"
 	"time"
-
-	"go.mongodb.org/mongo-driver/bson"
 )
 
 type ObtainAccountUseCase interface {
@@ -26,7 +24,9 @@ type ValidateAccountUseCase interface {
 }
 
 type AccountDataProvider interface {
-	Get(ctx context.Context, filter bson.M) (account Account, err error)
+	GetByIdentifier(ctx context.Context, nickname string, uid string) (account Account, err error)
+	GetByNickname(ctx context.Context, nickname string) (account Account, err error)
+	GetByUid(ctx context.Context, uid string) (account Account, err error)
 	Insert(ctx context.Context, acc Account) error
 	Update(ctx context.Context, acc Account) error
 }

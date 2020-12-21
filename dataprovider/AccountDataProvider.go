@@ -19,18 +19,56 @@ func NewAccountDataProvider(Conn *mongo.Client) entity.AccountDataProvider {
 	return &AccountDataProvider{Conn}
 }
 
-func (provider *AccountDataProvider) Get(ctx context.Context, filter bson.M) (res entity.Account, err error) {
+func (provider *AccountDataProvider) GetByIdentifier(ctx context.Context, nickname string, uid string) (res entity.Account, err error) {
 	var account entity.Account
 	fmt.Printf("\nSearching for account")
 
 	collection := provider.Conn.Database("sabidos").Collection("accounts")
 
-	if err = collection.FindOne(ctx, filter).Decode(&account); err != nil {
-		log.Printf("\nDocument with param  %s not found", filter)
+	bfilter := bson.M{"$or": []bson.M{bson.M{"nickname": nickname}, bson.M{"uid": uid}}}
+
+	if err = collection.FindOne(ctx, bfilter).Decode(&account); err != nil {
+		log.Printf("\nDocument with param  %s not found", bfilter)
 		return account, err
 	}
 	fmt.Printf("\nAccount found")
-	log.Printf("\nDocument with param  %s found", filter)
+	log.Printf("\nDocument with param  %s found", bfilter)
+
+	return account, err
+}
+
+func (provider *AccountDataProvider) GetByNickname(ctx context.Context, nickname string) (res entity.Account, err error) {
+	var account entity.Account
+	fmt.Printf("\nSearching for account")
+
+	collection := provider.Conn.Database("sabidos").Collection("accounts")
+
+	bfilter := bson.M{"nickname": nickname}
+
+	if err = collection.FindOne(ctx, bfilter).Decode(&account); err != nil {
+		log.Printf("\nDocument with param  %s not found", bfilter)
+		return account, err
+	}
+	fmt.Printf("\nAccount found")
+	log.Printf("\nDocument with param  %s found", bfilter)
+
+	return account, err
+}
+
+func (provider *AccountDataProvider) GetByUid(ctx context.Context, uid string) (res entity.Account, err error) {
+	var account entity.Account
+	fmt.Printf("\nSearching for account")
+
+	collection := provider.Conn.Database("sabidos").Collection("accounts")
+
+	bfilter := bson.M{"uid": uid}
+
+	if err = collection.FindOne(ctx, bfilter).Decode(&account); err != nil {
+		log.Printf("\nDocument with param  %s not found", bfilter)
+		return account, err
+	}
+	fmt.Printf("\nAccount found")
+	log.Printf("\nDocument with param  %s found", bfilter)
 
 	return account, err
 }

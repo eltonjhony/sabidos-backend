@@ -19,10 +19,13 @@ func NewCategoryDataProvider(Conn *mongo.Client) entity.CategoryDataProvider {
 	return &CategoryDataProvider{Conn}
 }
 
-func (provider *CategoryDataProvider) Get(ctx context.Context, filter bson.M) (res []entity.Category, err error) {
+func (provider *CategoryDataProvider) GetAll(ctx context.Context) (res []entity.Category, err error) {
 	var categories []entity.Category
 	collection := provider.Conn.Database("sabidos").Collection("categories")
-	cur, err := collection.Find(context.TODO(), filter)
+
+	bfilter := bson.M{}
+
+	cur, err := collection.Find(context.TODO(), bfilter)
 	if err != nil {
 		log.Fatal("Error on Finding all the documents", err)
 	}
@@ -55,14 +58,16 @@ func (provider *CategoryDataProvider) Insert(ctx context.Context, acc entity.Cat
 	return
 }
 
-func (provider *CategoryDataProvider) FindOne(ctx context.Context, filter bson.M) (res entity.Category, err error) {
+func (provider *CategoryDataProvider) FindById(ctx context.Context, id int) (res entity.Category, err error) {
 	var category entity.Category
 	fmt.Printf("\nSearching for Category")
 
 	collection := provider.Conn.Database("sabidos").Collection("categories")
 
-	if err = collection.FindOne(ctx, filter).Decode(&category); err != nil {
-		log.Printf("\nDocument with param  %s not found", filter)
+	bfilter := bson.M{"id": id}
+
+	if err = collection.FindOne(ctx, bfilter).Decode(&category); err != nil {
+		log.Printf("\nDocument with param  %s not found", bfilter)
 		return category, err
 	}
 

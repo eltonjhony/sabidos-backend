@@ -5,7 +5,6 @@ import (
 	"fmt"
 
 	"github.com/sabidos/core/entity"
-	"go.mongodb.org/mongo-driver/bson"
 )
 
 type ObtainAvatarUseCase struct {
@@ -18,9 +17,9 @@ func NewObtainAvatarUsecase(a entity.AvatarDataProvider) entity.ObtainAvatarUseC
 	}
 }
 
-func (a *ObtainAvatarUseCase) Get(c context.Context, filter bson.M) (av []entity.Avatar, err error) {
+func (a *ObtainAvatarUseCase) GetAll(c context.Context) (av []entity.Avatar, err error) {
 
-	av, err = a.avatarRepository.Get(c, filter)
+	av, err = a.avatarRepository.GetAll(c)
 	if err != nil {
 		fmt.Printf("Error %s ", err)
 		return av, err

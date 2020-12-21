@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/sabidos/core/entity"
-	"go.mongodb.org/mongo-driver/bson"
 )
 
 type ValidateAccountUseCase struct {
@@ -18,7 +17,6 @@ func NewValidateAccountUsecase(acc entity.AccountDataProvider) entity.ValidateAc
 }
 
 func (a *ValidateAccountUseCase) Validate(c context.Context, nickname string, uid string) error {
-	bfilter := bson.M{"$or": []bson.M{bson.M{"nickname": nickname}, bson.M{"uid": uid}}}
-	_, err := a.accountRepository.Get(c, bfilter)
+	_, err := a.accountRepository.GetByIdentifier(c, nickname, uid)
 	return err
 }
