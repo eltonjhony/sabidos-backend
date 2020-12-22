@@ -6,13 +6,18 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
+type QuizParams struct {
+	CategoryId int
+	Limit      int64
+}
+
 type QuizDataProvider interface {
-	GetByCategory(ctx context.Context, categoryId int, limit int64) (res []Quiz, err error)
+	GetByParams(ctx context.Context, params QuizParams) (res []Quiz, err error)
 	Insert(ctx context.Context, acc Quiz) (err error)
 }
 
 type ObtainQuizUseCase interface {
-	ObtainQuizRoundFor(ctx context.Context, nickname string, categoryId string) (res []Quiz, err error)
+	ObtainQuizRoundFor(ctx context.Context, nickname string, categoryId string) ([]Quiz, error)
 }
 
 type Quiz struct {

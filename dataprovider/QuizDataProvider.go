@@ -20,22 +20,23 @@ func NewQuizDataProvider(Conn *mongo.Client) entity.QuizDataProvider {
 	return &QuizDataProvider{Conn}
 }
 
-func (provider *QuizDataProvider) GetByCategory(ctx context.Context, categoryId int, limit int64) (res []entity.Quiz, err error) {
+func (provider *QuizDataProvider) GetByParams(ctx context.Context, params entity.QuizParams) (res []entity.Quiz, err error) {
 	var quizRound []entity.Quiz
 	collection := provider.Conn.Database("sabidos").Collection("quiz")
 
 	options := options.Find()
 
-	// Sort by `_id` field descending
-	options.SetSort(bson.D{{"_id", -1}})
-
 	// Limit the amount of documents being returned
-	options.SetLimit(limit)
+	options.SetLimit(params.Limit)
 
 	// Filter params
-	bfilter := bson.M{"category.id": categoryId}
+	bfilters := bson.M{}
+	if params.CategoryId > 1 {
+		fmt.Printf("Filter including category: %+d\n", params.CategoryId)
+		bfilters = bson.M{"category.id": params.CategoryId}
+	}
 
-	cur, err := collection.Find(ctx, bfilter, options)
+	cur, err := collection.Find(ctx, bfilters, options)
 
 	if err != nil {
 		log.Fatal("Error on Finding all the documents", err)

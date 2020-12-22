@@ -19,7 +19,7 @@ func NewObtainQuizUsecase(a entity.QuizDataProvider) entity.ObtainQuizUseCase {
 	}
 }
 
-func (a *ObtainQuizUseCase) ObtainQuizRoundFor(ctx context.Context, nickname string, categoryId string) (res []entity.Quiz, err error) {
+func (a *ObtainQuizUseCase) ObtainQuizRoundFor(ctx context.Context, nickname string, categoryId string) ([]entity.Quiz, error) {
 	fmt.Printf("Starting obtaining Quiz Round for nickname %s and category %s", nickname, categoryId)
 
 	if len(categoryId) == 0 {
@@ -31,6 +31,10 @@ func (a *ObtainQuizUseCase) ObtainQuizRoundFor(ctx context.Context, nickname str
 		return nil, errors.New("Error converting category id")
 	}
 
-	quizRound, err := a.quizRepository.GetByCategory(ctx, catId, 10)
+	quizRound, err := a.quizRepository.GetByParams(ctx, entity.QuizParams{
+		CategoryId: catId,
+		Limit:      10,
+	})
+
 	return quizRound, err
 }

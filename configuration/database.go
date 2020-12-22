@@ -63,7 +63,6 @@ func SetupModels(ac entity.AccountDataProvider, av entity.AvatarDataProvider, ca
 	if len(account.NickName) == 0 {
 		newAcc := entity.Account{"yiXtigKxtEVKl5mBh4qB7ZKumBs1", "Hulk", "Smash", entity.Avatar{1, ""}, entity.Reputation{5, 10}, 3, 100, 100, "email", true, "tel"}
 		ac.Insert(context.Background(), newAcc)
-
 	}
 
 	avatar, _ := av.FindById(context.Background(), 1)
