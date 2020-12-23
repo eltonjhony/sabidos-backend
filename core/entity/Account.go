@@ -43,6 +43,7 @@ type Account struct {
 	Email         string     `json:"email"`
 	IsAnonymous   bool       `json:"isAnonymous"`
 	Phone         string     `json:"phone"`
+	AccumulateXp  int        `json:"accumulateXp"`
 }
 
 func (acc *Account) SetAvatar(avatar Avatar) {
@@ -66,6 +67,10 @@ func (acc *Account) SetTotalAnswered(totalAnswered int) {
 
 func (acc *Account) SetTotalHits(totalHits int) {
 	acc.TotalHits = totalHits
+}
+
+func (acc *Account) AddAccumulateXp(accumulateXp int) {
+	acc.AccumulateXp += accumulateXp
 }
 
 func (acc *Account) CompleteAccountIfAnonymous() {

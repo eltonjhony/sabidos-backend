@@ -61,7 +61,7 @@ func SetupModels(ac entity.AccountDataProvider, av entity.AvatarDataProvider, ca
 	account, _ := ac.GetByIdentifier(context.Background(), "smash", "")
 
 	if len(account.NickName) == 0 {
-		newAcc := entity.Account{"yiXtigKxtEVKl5mBh4qB7ZKumBs1", "Hulk", "Smash", entity.Avatar{1, ""}, entity.Reputation{5, 10}, 3, 100, 100, "email", true, "tel"}
+		newAcc := entity.Account{"yiXtigKxtEVKl5mBh4qB7ZKumBs1", "Hulk", "Smash", entity.Avatar{1, ""}, entity.Reputation{5, 10}, 3, 100, 100, "email", true, "tel", 0}
 		ac.Insert(context.Background(), newAcc)
 	}
 

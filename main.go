@@ -49,7 +49,8 @@ func main() {
 	// Constructing quiz round Resource
 	quizDataProvider := _dataprovider.NewQuizDataProvider(db)
 	obtainQuizUseCase := _quizUseCase.NewObtainQuizUsecase(quizDataProvider)
-	_entrypoint.NewQuizRoundEntrypointHandler(api, obtainQuizUseCase)
+	updateQuizRoundUseCase := _quizUseCase.NewUpdateQuizRoundUseCase(accountDataProvider)
+	_entrypoint.NewQuizRoundEntrypointHandler(api, obtainQuizUseCase, updateQuizRoundUseCase)
 
 	// Init default database values
 	config.SetupModels(accountDataProvider, avatarDataProvider, categoryDataProvider, quizDataProvider, db)

@@ -40,6 +40,7 @@ func (a *InserAccountUseCase) Insert(c context.Context, acc entity.Account) (acc
 	account.SetTotalHits(0)
 	account.SetXpFactor(3)
 	account.SetReputation(1, 0)
+	account.AddAccumulateXp(0)
 	account.CompleteAccountIfAnonymous()
 
 	err = a.accountRepository.Insert(c, account)

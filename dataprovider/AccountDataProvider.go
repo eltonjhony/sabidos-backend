@@ -98,10 +98,11 @@ func (provider *AccountDataProvider) Update(ctx context.Context, acc entity.Acco
 
 	update := bson.M{
 		"$set": bson.M{
-			"name":        acc.Name,
-			"email":       acc.Email,
-			"phone":       acc.Phone,
-			"isanonymous": acc.IsAnonymous,
+			"name":         acc.Name,
+			"email":        acc.Email,
+			"phone":        acc.Phone,
+			"isanonymous":  acc.IsAnonymous,
+			"accumulatexp": acc.AccumulateXp,
 		},
 	}
 
