@@ -13,7 +13,7 @@ type ObtainQuizUseCase struct {
 	quizRepository entity.QuizDataProvider
 }
 
-func NewObtainQuizUsecase(a entity.QuizDataProvider) entity.ObtainQuizUseCase {
+func NewObtainQuizUsecase(a entity.QuizDataProvider) ObtainQuizUseCaseProtocol {
 	return &ObtainQuizUseCase{
 		quizRepository: a,
 	}

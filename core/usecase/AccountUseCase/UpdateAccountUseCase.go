@@ -5,19 +5,20 @@ import (
 	"errors"
 
 	"github.com/sabidos/core/entity"
+	"github.com/sabidos/entrypoint/model"
 )
 
 type UpdateAccountUseCase struct {
 	accountRepository entity.AccountDataProvider
 }
 
-func NewUpdateAccountUsecase(acc entity.AccountDataProvider) entity.UpdateAccountUseCase {
+func NewUpdateAccountUsecase(acc entity.AccountDataProvider) UpdateAccountUseCaseProtocol {
 	return &UpdateAccountUseCase{
 		accountRepository: acc,
 	}
 }
 
-func (a *UpdateAccountUseCase) Update(c context.Context, uid string, acc entity.Account) (entity.Account, error) {
+func (a *UpdateAccountUseCase) Update(c context.Context, uid string, model model.UpdateAccountModel) (entity.Account, error) {
 
 	account, err := a.accountRepository.GetByUid(c, uid)
 
@@ -25,19 +26,19 @@ func (a *UpdateAccountUseCase) Update(c context.Context, uid string, acc entity.
 		return account, errors.New("Account not found")
 	}
 
-	if len(acc.Name) > 0 {
-		account.Name = acc.Name
+	if len(model.Name) > 0 {
+		account.Name = model.Name
 	}
 
-	if len(acc.Email) > 0 {
-		account.Email = acc.Email
+	if len(model.Email) > 0 {
+		account.Email = model.Email
 	}
 
-	if len(acc.Phone) > 0 {
-		account.Phone = acc.Phone
+	if len(model.Phone) > 0 {
+		account.Phone = model.Phone
 	}
 
-	account.IsAnonymous = acc.IsAnonymous
+	account.IsAnonymous = model.IsAnonymous
 
 	err = a.accountRepository.Update(c, account)
 

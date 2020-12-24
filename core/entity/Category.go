@@ -16,7 +16,3 @@ type CategoryDataProvider interface {
 	Insert(ctx context.Context, category Category) error
 	FindById(ctx context.Context, id int) (category Category, err error)
 }
-
-type ObtainCategoryUseCase interface {
-	GetAll(ctx context.Context) (category []Category, err error)
-}

@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/sabidos/core/entity"
+	"github.com/sabidos/core/usecase/AccountUseCase"
 	"github.com/sabidos/entrypoint/model"
 )
 
@@ -14,14 +14,16 @@ const DATA_NOT_FOUND_CODE = 2
 const SUCCESS = 3
 
 type AccountEntrypointHandler struct {
-	ObtainAccount   entity.ObtainAccountUseCase
-	InsertAccount   entity.InsertAccountUseCase
-	ValidateAccount entity.ValidateAccountUseCase
-	UpdateAccount   entity.UpdateAccountUseCase
+	ObtainAccount   AccountUseCase.ObtainAccountUseCaseProtocol
+	InsertAccount   AccountUseCase.InsertAccountUseCaseProtocol
+	ValidateAccount AccountUseCase.ValidateAccountUseCaseProtocol
+	UpdateAccount   AccountUseCase.UpdateAccountUseCaseProtocol
 }
 
-func NewAccountEntrypointHandler(r *gin.RouterGroup, obtainAccount entity.ObtainAccountUseCase, insertAcc entity.InsertAccountUseCase,
-	validateAcc entity.ValidateAccountUseCase, updateAcc entity.UpdateAccountUseCase) {
+func NewAccountEntrypointHandler(r *gin.RouterGroup, obtainAccount AccountUseCase.ObtainAccountUseCaseProtocol,
+	insertAcc AccountUseCase.InsertAccountUseCaseProtocol,
+	validateAcc AccountUseCase.ValidateAccountUseCaseProtocol,
+	updateAcc AccountUseCase.UpdateAccountUseCaseProtocol) {
 	handler := &AccountEntrypointHandler{
 		ObtainAccount:   obtainAccount,
 		InsertAccount:   insertAcc,
@@ -93,19 +95,7 @@ func (accountEntrypointHandler *AccountEntrypointHandler) Create(c *gin.Context)
 
 	fmt.Println(accountModel)
 
-	account := entity.Account{
-		Uid:      accountModel.Uid,
-		Name:     accountModel.Name,
-		NickName: accountModel.NickName,
-		Avatar: entity.Avatar{
-			Id: accountModel.DefaultAvatarId,
-		},
-		Email:       accountModel.Email,
-		IsAnonymous: accountModel.IsAnonymous,
-		Phone:       accountModel.Phone,
-	}
-
-	account, err := accountEntrypointHandler.InsertAccount.Insert(c.Request.Context(), account)
+	account, err := accountEntrypointHandler.InsertAccount.Insert(c.Request.Context(), accountModel)
 	if err != nil {
 		fmt.Println("Can't create account", err)
 		c.JSON(400, gin.H{"message": err.Error()})
@@ -128,14 +118,7 @@ func (accountEntrypointHandler *AccountEntrypointHandler) Update(c *gin.Context)
 
 	uid := c.Param("uid")
 
-	account := entity.Account{
-		Name:        updateAccountModel.Name,
-		Email:       updateAccountModel.Email,
-		IsAnonymous: updateAccountModel.IsAnonymous,
-		Phone:       updateAccountModel.Phone,
-	}
-
-	account, err := accountEntrypointHandler.UpdateAccount.Update(c.Request.Context(), uid, account)
+	account, err := accountEntrypointHandler.UpdateAccount.Update(c.Request.Context(), uid, updateAccountModel)
 	if err != nil {
 		fmt.Println("Can't update account", err)
 		c.JSON(400, gin.H{"message": err.Error()})

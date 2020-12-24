@@ -16,14 +16,6 @@ type QuizDataProvider interface {
 	Insert(ctx context.Context, acc Quiz) (err error)
 }
 
-type ObtainQuizUseCase interface {
-	ObtainQuizRoundFor(ctx context.Context, nickname string, categoryId string) ([]Quiz, error)
-}
-
-type UpdateQuizRoundUseCase interface {
-	UpdateQuizRoundValues(ctx context.Context, nickname string, accumulateXp int) (err error)
-}
-
 type Quiz struct {
 	Id                 *primitive.ObjectID `json:"id" bson:"_id,omitempty"`
 	ImageUrl           string              `json:"imageUrl"`

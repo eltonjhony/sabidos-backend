@@ -4,14 +4,14 @@ import (
 	"fmt"
 
 	"github.com/gin-gonic/gin"
-	"github.com/sabidos/core/entity"
+	"github.com/sabidos/core/usecase/CategoryUseCase"
 )
 
 type CategoryEntrypointHandler struct {
-	ObtainCategory entity.ObtainCategoryUseCase
+	ObtainCategory CategoryUseCase.ObtainCategoryUseCaseProtocol
 }
 
-func NewCategoryEntrypointHandler(r *gin.RouterGroup, obtainCategory entity.ObtainCategoryUseCase) {
+func NewCategoryEntrypointHandler(r *gin.RouterGroup, obtainCategory CategoryUseCase.ObtainCategoryUseCaseProtocol) {
 	handler := &CategoryEntrypointHandler{
 		ObtainCategory: obtainCategory,
 	}

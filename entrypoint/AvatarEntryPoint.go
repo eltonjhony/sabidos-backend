@@ -4,14 +4,14 @@ import (
 	"fmt"
 
 	"github.com/gin-gonic/gin"
-	"github.com/sabidos/core/entity"
+	"github.com/sabidos/core/usecase/AvatarUseCase"
 )
 
 type AvatarEntrypointHandler struct {
-	ObtainAvatar entity.ObtainAvatarUseCase
+	ObtainAvatar AvatarUseCase.ObtainAvatarUseCaseProtocol
 }
 
-func NewAvatarEntrypointHandler(r *gin.RouterGroup, obtainAvatar entity.ObtainAvatarUseCase) {
+func NewAvatarEntrypointHandler(r *gin.RouterGroup, obtainAvatar AvatarUseCase.ObtainAvatarUseCaseProtocol) {
 	handler := &AvatarEntrypointHandler{
 		ObtainAvatar: obtainAvatar,
 	}

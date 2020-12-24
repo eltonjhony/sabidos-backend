@@ -10,7 +10,7 @@ type ValidateAccountUseCase struct {
 	accountRepository entity.AccountDataProvider
 }
 
-func NewValidateAccountUsecase(acc entity.AccountDataProvider) entity.ValidateAccountUseCase {
+func NewValidateAccountUsecase(acc entity.AccountDataProvider) ValidateAccountUseCaseProtocol {
 	return &ValidateAccountUseCase{
 		accountRepository: acc,
 	}

@@ -2,14 +2,15 @@ package entrypoint
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/sabidos/core/entity"
+
+	"github.com/sabidos/core/usecase/RankingUseCase"
 )
 
 type RankingEntrypointHandler struct {
-	ObtainRanking entity.RankingUseCase
+	ObtainRanking RankingUseCase.RankingUseCaseProtocol
 }
 
-func NewRankingEntrypointHandler(r *gin.RouterGroup, us entity.RankingUseCase) {
+func NewRankingEntrypointHandler(r *gin.RouterGroup, us RankingUseCase.RankingUseCaseProtocol) {
 	handler := &RankingEntrypointHandler{
 		ObtainRanking: us,
 	}

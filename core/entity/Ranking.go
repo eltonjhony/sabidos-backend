@@ -10,10 +10,6 @@ type Filter struct {
 	Name string `json:"name"`
 }
 
-type RankingUseCase interface {
-	Fetch(ctx context.Context) ([]Ranking, error)
-}
-
-type RankingRepository interface {
+type RankingDataProvider interface {
 	Fetch(ctx context.Context) (res []Ranking, err error)
 }

@@ -14,7 +14,7 @@ type RankingDataProvider struct {
 	Conn *mongo.Client
 }
 
-func NewRankingDataProvider(Conn *mongo.Client) entity.RankingRepository {
+func NewRankingDataProvider(Conn *mongo.Client) entity.RankingDataProvider {
 	return &RankingDataProvider{Conn}
 }
 

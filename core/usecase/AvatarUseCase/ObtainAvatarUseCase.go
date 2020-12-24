@@ -11,7 +11,7 @@ type ObtainAvatarUseCase struct {
 	avatarRepository entity.AvatarDataProvider
 }
 
-func NewObtainAvatarUsecase(a entity.AvatarDataProvider) entity.ObtainAvatarUseCase {
+func NewObtainAvatarUsecase(a entity.AvatarDataProvider) ObtainAvatarUseCaseProtocol {
 	return &ObtainAvatarUseCase{
 		avatarRepository: a,
 	}

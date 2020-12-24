@@ -11,7 +11,7 @@ type ObtainAccountUseCase struct {
 	accountRepository entity.AccountDataProvider
 }
 
-func NewObtainAccountUsecase(a entity.AccountDataProvider) entity.ObtainAccountUseCase {
+func NewObtainAccountUsecase(a entity.AccountDataProvider) ObtainAccountUseCaseProtocol {
 	return &ObtainAccountUseCase{
 		accountRepository: a,
 	}

@@ -7,10 +7,10 @@ import (
 )
 
 type RankingUseCase struct {
-	rankingRepo entity.RankingRepository
+	rankingRepo entity.RankingDataProvider
 }
 
-func NewRankingUsecase(a entity.RankingRepository) entity.RankingUseCase {
+func NewRankingUsecase(a entity.RankingDataProvider) RankingUseCaseProtocol {
 	return &RankingUseCase{
 		rankingRepo: a,
 	}

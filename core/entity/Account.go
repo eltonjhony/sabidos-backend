@@ -6,23 +6,6 @@ import (
 	"time"
 )
 
-type ObtainAccountUseCase interface {
-	GetByNickname(ctx context.Context, nickname string) (acc Account, err error)
-	GetByUid(ctx context.Context, uid string) (acc Account, err error)
-}
-
-type InsertAccountUseCase interface {
-	Insert(ctx context.Context, acc Account) (account Account, err error)
-}
-
-type UpdateAccountUseCase interface {
-	Update(ctx context.Context, uid string, acc Account) (account Account, err error)
-}
-
-type ValidateAccountUseCase interface {
-	Validate(c context.Context, nickname string, uid string) error
-}
-
 type AccountDataProvider interface {
 	GetByIdentifier(ctx context.Context, nickname string, uid string) (account Account, err error)
 	GetByNickname(ctx context.Context, nickname string) (account Account, err error)

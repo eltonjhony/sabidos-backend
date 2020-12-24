@@ -15,7 +15,3 @@ type AvatarDataProvider interface {
 	Insert(ctx context.Context, avatar Avatar) error
 	FindById(ctx context.Context, id int) (avatar Avatar, err error)
 }
-
-type ObtainAvatarUseCase interface {
-	GetAll(ctx context.Context) (avatar []Avatar, err error)
-}

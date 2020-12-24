@@ -11,7 +11,7 @@ type ObtainCategoryUseCase struct {
 	categoryRepository entity.CategoryDataProvider
 }
 
-func NewObtainCategoryUsecase(a entity.CategoryDataProvider) entity.ObtainCategoryUseCase {
+func NewObtainCategoryUsecase(a entity.CategoryDataProvider) ObtainCategoryUseCaseProtocol {
 	return &ObtainCategoryUseCase{
 		categoryRepository: a,
 	}

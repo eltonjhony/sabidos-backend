@@ -8,29 +8,40 @@ import (
 	"time"
 
 	"github.com/sabidos/core/entity"
+	"github.com/sabidos/entrypoint/model"
 )
 
-type InserAccountUseCase struct {
+type InsertAccountUseCase struct {
 	accountRepository  entity.AccountDataProvider
 	avatarDataProvider entity.AvatarDataProvider
 }
 
-func NewInsertAccountUsecase(acc entity.AccountDataProvider, avatar entity.AvatarDataProvider) entity.InsertAccountUseCase {
-	return &InserAccountUseCase{
+func NewInsertAccountUsecase(acc entity.AccountDataProvider, avatar entity.AvatarDataProvider) InsertAccountUseCaseProtocol {
+	return &InsertAccountUseCase{
 		accountRepository:  acc,
 		avatarDataProvider: avatar,
 	}
 }
 
-func (a *InserAccountUseCase) Insert(c context.Context, acc entity.Account) (account entity.Account, err error) {
+func (a *InsertAccountUseCase) Insert(c context.Context, model model.AccountModel) (account entity.Account, err error) {
 
-	if account, _ := a.accountRepository.GetByIdentifier(c, acc.NickName, acc.Uid); len(account.NickName) > 0 {
+	if account, _ := a.accountRepository.GetByIdentifier(c, model.NickName, model.Uid); len(account.NickName) > 0 {
 		return account, errors.New("Account already exists")
 	}
 
-	account = acc
+	account = entity.Account{
+		Uid:      model.Uid,
+		Name:     model.Name,
+		NickName: model.NickName,
+		Avatar: entity.Avatar{
+			Id: model.DefaultAvatarId,
+		},
+		Email:       model.Email,
+		IsAnonymous: model.IsAnonymous,
+		Phone:       model.Phone,
+	}
 
-	avatar, err := a.getAccountAvatar(c, acc)
+	avatar, err := a.getAccountAvatar(c, account)
 	if err != nil {
 		return account, err
 	}
@@ -52,7 +63,7 @@ func (a *InserAccountUseCase) Insert(c context.Context, acc entity.Account) (acc
 	return account, err
 }
 
-func (a *InserAccountUseCase) getAccountAvatar(c context.Context, acc entity.Account) (res entity.Avatar, err error) {
+func (a *InsertAccountUseCase) getAccountAvatar(c context.Context, acc entity.Account) (res entity.Avatar, err error) {
 	var result entity.Avatar
 	if acc.Avatar.Id == 0 || acc.IsAnonymous {
 		avatar, err := a.getRandomAvatar(c)
@@ -73,7 +84,7 @@ func (a *InserAccountUseCase) getAccountAvatar(c context.Context, acc entity.Acc
 	return result, err
 }
 
-func (a *InserAccountUseCase) getRandomAvatar(c context.Context) (res entity.Avatar, err error) {
+func (a *InsertAccountUseCase) getRandomAvatar(c context.Context) (res entity.Avatar, err error) {
 	avatarCount, err := a.avatarDataProvider.Count(c)
 	if err != nil {
 		return res, err

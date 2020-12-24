@@ -5,16 +5,17 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/sabidos/core/entity"
+	"github.com/sabidos/core/usecase/QuizUseCase"
 	"github.com/sabidos/entrypoint/model"
 )
 
 type QuizEntrypointHandler struct {
-	ObtainQuiz      entity.ObtainQuizUseCase
-	UpdateQuizRound entity.UpdateQuizRoundUseCase
+	ObtainQuiz      QuizUseCase.ObtainQuizUseCaseProtocol
+	UpdateQuizRound QuizUseCase.UpdateQuizRoundUseCaseProtocol
 }
 
-func NewQuizRoundEntrypointHandler(r *gin.RouterGroup, obtainQuiz entity.ObtainQuizUseCase, updateQuizRound entity.UpdateQuizRoundUseCase) {
+func NewQuizRoundEntrypointHandler(r *gin.RouterGroup, obtainQuiz QuizUseCase.ObtainQuizUseCaseProtocol,
+	updateQuizRound QuizUseCase.UpdateQuizRoundUseCaseProtocol) {
 	handler := &QuizEntrypointHandler{
 		ObtainQuiz:      obtainQuiz,
 		UpdateQuizRound: updateQuizRound,
@@ -22,6 +23,7 @@ func NewQuizRoundEntrypointHandler(r *gin.RouterGroup, obtainQuiz entity.ObtainQ
 
 	r.GET("/quiz/round/:nickname", handler.FindNextRound)
 	r.POST("/quiz/round", handler.UpdateQuizRoundValues)
+	r.POST("/quiz", handler.UpdateQuizValues)
 }
 
 func (quizEntrypointHandler *QuizEntrypointHandler) FindNextRound(c *gin.Context) {
@@ -40,7 +42,28 @@ func (quizEntrypointHandler *QuizEntrypointHandler) FindNextRound(c *gin.Context
 
 func (quizEntrypointHandler *QuizEntrypointHandler) UpdateQuizRoundValues(c *gin.Context) {
 
-	var model model.PostRoundModel
+	var requestModel model.PostRoundModel
+
+	if err := c.ShouldBindJSON(&requestModel); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	fmt.Println(requestModel)
+
+	err := quizEntrypointHandler.UpdateQuizRound.UpdateQuizRoundValues(c, requestModel)
+	if err != nil {
+		fmt.Println("Error Updating Quiz Round Values", err)
+		c.JSON(400, gin.H{"message": err.Error()})
+		return
+	}
+
+	c.JSON(200, gin.H{})
+}
+
+func (quizEntrypointHandler *QuizEntrypointHandler) UpdateQuizValues(c *gin.Context) {
+
+	var model model.PostQuizModel
 
 	if err := c.ShouldBindJSON(&model); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -49,12 +72,4 @@ func (quizEntrypointHandler *QuizEntrypointHandler) UpdateQuizRoundValues(c *gin
 
 	fmt.Println(model)
 
-	err := quizEntrypointHandler.UpdateQuizRound.UpdateQuizRoundValues(c, model.NickName, model.AccumulateXp)
-	if err != nil {
-		fmt.Println("Error Updating Quiz Round Values", err)
-		c.JSON(400, gin.H{"message": err.Error()})
-		return
-	}
-
-	c.JSON(200, gin.H{})
 }
