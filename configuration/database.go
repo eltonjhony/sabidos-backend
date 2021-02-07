@@ -38,7 +38,7 @@ func ConnectToDB() *mongo.Client {
 	return client
 }
 
-func SetupModels(ac entity.AccountDataProvider, av entity.AvatarDataProvider, cat entity.CategoryDataProvider, qz entity.QuizDataProvider, conn *mongo.Client) {
+func SetupModels(conn *mongo.Client, ac entity.AccountDataProvider, av entity.AvatarDataProvider, cat entity.CategoryDataProvider, qz entity.QuizDataProvider, lti entity.LevelThresholdInfoDataProvider) {
 	quickstartDatabase := conn.Database("sabidos")
 	quickstartDatabase.Collection("accounts")
 
@@ -57,13 +57,6 @@ func SetupModels(ac entity.AccountDataProvider, av entity.AvatarDataProvider, ca
 	avatar13 := entity.Avatar{13, "https://res.cloudinary.com/ddb86uj5i/image/upload/v1604167774/sabidos/avatar/13.png"}
 	avatar14 := entity.Avatar{14, "https://res.cloudinary.com/ddb86uj5i/image/upload/v1604167774/sabidos/avatar/14.png"}
 	avatar15 := entity.Avatar{15, "https://res.cloudinary.com/ddb86uj5i/image/upload/v1604167774/sabidos/avatar/15.png"}
-
-	account, _ := ac.GetByIdentifier(context.Background(), "smash", "")
-
-	if len(account.NickName) == 0 {
-		newAcc := entity.Account{"yiXtigKxtEVKl5mBh4qB7ZKumBs1", "Hulk", "Smash", entity.Avatar{1, ""}, entity.Reputation{5, 10}, 3, 100, 100, "email", true, "tel", 0}
-		ac.Insert(context.Background(), newAcc)
-	}
 
 	avatar, _ := av.FindById(context.Background(), 1)
 
@@ -152,6 +145,35 @@ func SetupModels(ac entity.AccountDataProvider, av entity.AvatarDataProvider, ca
 	})
 
 	qz.Insert(context.Background(), quiz1)
+
+	level1 := entity.LevelThresholdInfo{
+		Level:                 1,
+		HitsPerStar:           2,
+		TotalStarsToNextLevel: 2,
+	}
+
+	level2 := entity.LevelThresholdInfo{
+		Level:                 2,
+		HitsPerStar:           65,
+		TotalStarsToNextLevel: 5,
+	}
+
+	level3 := entity.LevelThresholdInfo{
+		Level:                 3,
+		HitsPerStar:           95,
+		TotalStarsToNextLevel: 5,
+	}
+
+	level4 := entity.LevelThresholdInfo{
+		Level:                 4,
+		HitsPerStar:           120,
+		TotalStarsToNextLevel: 5,
+	}
+
+	lti.Insert(context.Background(), level1)
+	lti.Insert(context.Background(), level2)
+	lti.Insert(context.Background(), level3)
+	lti.Insert(context.Background(), level4)
 
 }
 

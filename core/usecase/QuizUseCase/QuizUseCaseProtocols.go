@@ -11,6 +11,6 @@ type ObtainQuizUseCaseProtocol interface {
 	ObtainQuizRoundFor(ctx context.Context, nickname string, categoryId string) ([]entity.Quiz, error)
 }
 
-type UpdateQuizRoundUseCaseProtocol interface {
-	UpdateQuizRoundValues(ctx context.Context, requestModel model.PostRoundModel) (err error)
+type UpdateQuizAccountValuesUseCaseProtocol interface {
+	UpdateQuizAccountValues(ctx context.Context, requestModel model.PostQuizModel) (levelHasBeenUp bool, starHasBeenUp bool, err error)
 }

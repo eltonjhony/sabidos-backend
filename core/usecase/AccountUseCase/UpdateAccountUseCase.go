@@ -41,11 +41,5 @@ func (a *UpdateAccountUseCase) Update(c context.Context, uid string, model model
 	account.IsAnonymous = model.IsAnonymous
 
 	err = a.accountRepository.Update(c, account)
-
-	if err != nil {
-		return account, err
-	}
-
 	return account, err
-
 }

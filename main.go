@@ -48,12 +48,16 @@ func main() {
 
 	// Constructing quiz round Resource
 	quizDataProvider := _dataprovider.NewQuizDataProvider(db)
+	scoreboardDataProvider := _dataprovider.NewScoreboardDataProvider(db)
+	levelThresholdInfoDataProvider := _dataprovider.NewLevelThresholdInfoDataProvider(db)
+
 	obtainQuizUseCase := _quizUseCase.NewObtainQuizUsecase(quizDataProvider)
-	updateQuizRoundUseCase := _quizUseCase.NewUpdateQuizRoundUseCase(accountDataProvider)
-	_entrypoint.NewQuizRoundEntrypointHandler(api, obtainQuizUseCase, updateQuizRoundUseCase)
+	updateQuizAccountUseCase := _quizUseCase.NewUpdateQuizAccountValuesUseCase(accountDataProvider, scoreboardDataProvider, levelThresholdInfoDataProvider)
+
+	_entrypoint.NewQuizRoundEntrypointHandler(api, obtainQuizUseCase, updateQuizAccountUseCase)
 
 	// Init default database values
-	config.SetupModels(accountDataProvider, avatarDataProvider, categoryDataProvider, quizDataProvider, db)
+	config.SetupModels(db, accountDataProvider, avatarDataProvider, categoryDataProvider, quizDataProvider, levelThresholdInfoDataProvider)
 
 	r.Run()
 }

@@ -15,18 +15,20 @@ type AccountDataProvider interface {
 }
 
 type Account struct {
-	Uid           string     `json:"uid"`
-	Name          string     `json:"name"`
-	NickName      string     `json:"nickname"`
-	Avatar        Avatar     `json:"avatar"`
-	Reputation    Reputation `json:"reputation"`
-	XpFactor      int        `json:"xpFactor"`
-	TotalAnswered int        `json:"totalAnswered"`
-	TotalHits     int        `json:"totalHits"`
-	Email         string     `json:"email"`
-	IsAnonymous   bool       `json:"isAnonymous"`
-	Phone         string     `json:"phone"`
-	AccumulateXp  int        `json:"accumulateXp"`
+	Uid                    string     `json:"uid"`
+	Name                   string     `json:"name"`
+	NickName               string     `json:"nickname"`
+	Avatar                 Avatar     `json:"avatar"`
+	Reputation             Reputation `json:"reputation"`
+	XpFactor               int        `json:"xpFactor"`
+	TotalAnswered          int        `json:"totalAnswered"`
+	TotalHits              int        `json:"totalHits"`
+	Email                  string     `json:"email"`
+	IsAnonymous            bool       `json:"isAnonymous"`
+	Phone                  string     `json:"phone"`
+	AccumulateXp           int        `json:"accumulateXp"`
+	AccumulateResponseTime int        `json:"accumulateResponseTime"`
+	AnsweredQuiz           []string   `json:"answeredQuiz"`
 }
 
 func (acc *Account) SetAvatar(avatar Avatar) {
@@ -52,8 +54,21 @@ func (acc *Account) SetTotalHits(totalHits int) {
 	acc.TotalHits = totalHits
 }
 
-func (acc *Account) AddAccumulateXp(accumulateXp int) {
-	acc.AccumulateXp += accumulateXp
+func (acc *Account) IncreaseTotalAnswered() {
+	acc.TotalAnswered += 1
+}
+
+func (acc *Account) IncreaseTotalHits() {
+	acc.TotalHits += 1
+	acc.AccumulateXp += acc.XpFactor
+}
+
+func (acc *Account) AddAccumulateResponseTime(responseTime int) {
+	acc.AccumulateResponseTime += responseTime
+}
+
+func (acc *Account) AddAnsweredQuiz(quizId string) {
+	acc.AnsweredQuiz = append(acc.AnsweredQuiz, quizId)
 }
 
 func (acc *Account) CompleteAccountIfAnonymous() {

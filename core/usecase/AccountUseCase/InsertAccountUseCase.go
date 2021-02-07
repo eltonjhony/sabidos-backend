@@ -51,16 +51,11 @@ func (a *InsertAccountUseCase) Insert(c context.Context, model model.AccountMode
 	account.SetTotalHits(0)
 	account.SetXpFactor(3)
 	account.SetReputation(1, 0)
-	account.AddAccumulateXp(0)
+	account.AddAccumulateResponseTime(0)
 	account.CompleteAccountIfAnonymous()
 
 	err = a.accountRepository.Insert(c, account)
-
-	if err != nil {
-		return account, err
-	}
-
-	return account, err
+	return
 }
 
 func (a *InsertAccountUseCase) getAccountAvatar(c context.Context, acc entity.Account) (res entity.Avatar, err error) {

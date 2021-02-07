@@ -10,19 +10,18 @@ import (
 )
 
 type QuizEntrypointHandler struct {
-	ObtainQuiz      QuizUseCase.ObtainQuizUseCaseProtocol
-	UpdateQuizRound QuizUseCase.UpdateQuizRoundUseCaseProtocol
+	ObtainQuiz        QuizUseCase.ObtainQuizUseCaseProtocol
+	UpdateQuizAccount QuizUseCase.UpdateQuizAccountValuesUseCaseProtocol
 }
 
 func NewQuizRoundEntrypointHandler(r *gin.RouterGroup, obtainQuiz QuizUseCase.ObtainQuizUseCaseProtocol,
-	updateQuizRound QuizUseCase.UpdateQuizRoundUseCaseProtocol) {
+	updateQuizAccount QuizUseCase.UpdateQuizAccountValuesUseCaseProtocol) {
 	handler := &QuizEntrypointHandler{
-		ObtainQuiz:      obtainQuiz,
-		UpdateQuizRound: updateQuizRound,
+		ObtainQuiz:        obtainQuiz,
+		UpdateQuizAccount: updateQuizAccount,
 	}
 
 	r.GET("/quiz/round/:nickname", handler.FindNextRound)
-	r.POST("/quiz/round", handler.UpdateQuizRoundValues)
 	r.POST("/quiz", handler.UpdateQuizValues)
 }
 
@@ -40,27 +39,6 @@ func (quizEntrypointHandler *QuizEntrypointHandler) FindNextRound(c *gin.Context
 	c.JSON(200, gin.H{"questions": quizRound})
 }
 
-func (quizEntrypointHandler *QuizEntrypointHandler) UpdateQuizRoundValues(c *gin.Context) {
-
-	var requestModel model.PostRoundModel
-
-	if err := c.ShouldBindJSON(&requestModel); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	fmt.Println(requestModel)
-
-	err := quizEntrypointHandler.UpdateQuizRound.UpdateQuizRoundValues(c, requestModel)
-	if err != nil {
-		fmt.Println("Error Updating Quiz Round Values", err)
-		c.JSON(400, gin.H{"message": err.Error()})
-		return
-	}
-
-	c.JSON(200, gin.H{})
-}
-
 func (quizEntrypointHandler *QuizEntrypointHandler) UpdateQuizValues(c *gin.Context) {
 
 	var model model.PostQuizModel
@@ -72,4 +50,15 @@ func (quizEntrypointHandler *QuizEntrypointHandler) UpdateQuizValues(c *gin.Cont
 
 	fmt.Println(model)
 
+	levelHasBeenUp, starHasBeenUp, err := quizEntrypointHandler.UpdateQuizAccount.UpdateQuizAccountValues(c, model)
+	if err != nil {
+		fmt.Println("Error Updating Quiz Account Values", err)
+		c.JSON(400, gin.H{"message": err.Error()})
+		return
+	}
+
+	c.JSON(200, gin.H{
+		"levelHasBeenUp": levelHasBeenUp,
+		"starHasBeenUp":  starHasBeenUp,
+	})
 }
